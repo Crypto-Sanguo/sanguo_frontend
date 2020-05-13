@@ -31,4 +31,5 @@ To deploy, do the following:
 4) Compile with AngularJS 
 
   `npm install`
+
   `ng build --prod`
