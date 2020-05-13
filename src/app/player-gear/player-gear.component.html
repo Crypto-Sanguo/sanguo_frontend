@@ -1,0 +1,153 @@
+<div class="jh-player-gear" *ngIf="!showSynthesise">
+  <div class="row" style="margin:12px 20px;padding:6px 4px 2px 4px;">
+    <div class="col-auto text-left">
+      <button class="btn btn-sm btn-primary" (click)="goBack()">{{['返回','Back'][language]}}</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-sm btn-primary" (click)="gotoSynthesise()">{{['合成','Craft'][language]}}</button>
+      <button class="btn btn-sm btn-primary" (click)="recycleGearInBatch()" style="margin-left: 4px;">{{['回收','Recycle'][language]}}</button>
+      <button class="btn btn-sm btn-primary" (click)="sellInBatch()" style="margin-left: 4px;">{{['出售','Sell'][language]}}</button>
+    </div>
+  </div>
+  <div class="row jh-player-gear-container">
+    <ng-container *ngFor="let item of profile.items">
+      <div class="col-md-6 col-12" style="padding: 0 8px 16px 8px" *ngIf="filterValue == 0 || filterValue == 1 && item.isMountable || filterValue == 2 && !item.isMountable">
+        <div class="card row jh-player-gear-one">
+          <div class="col-6 jh-player-gear-img">
+            <img src={{itemData[item.itemId].imagePath}}>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-player-gear-name text-left">
+              {{[itemData[item.itemId].nameCN,itemData[item.itemId].nameEN][language]}}
+            </h4>
+            <p class="jh-player-gear-stats">{{['等级','Level'][language]}}: {{item.level}}<br>
+              <ng-container *ngIf="item.isMountable">{{['纯度','Quality'][language]}}: {{item.score}}<br>
+                <a href="javascript:void(0)" (click)="showMarketItemInfo(item.rId)" *ngIf="item.isMountable">{{['查看','View'][language]}}</a>
+              </ng-container>
+              <ng-container *ngIf="!item.isMountable">{{['基础材料','Basic Material'][language]}}</ng-container>
+            </p>
+              <h6 class="text-danger" *ngIf="item.forSale">{{['出售中','In sale'][language]}}</h6>
+              <h6 *ngIf="item.mountedByUnitId">
+                <span style="color: #fd7e14;">{{[unitData[item.mountedByUnitId].nameCN,unitData[item.mountedByUnitId].nameEN][language]}}</span>
+                {{['装备中',' Equiped'][language]}}
+              </h6>
+              <h6 *ngIf="inCooldown(item)">
+                {{["冷却中", "In CD"][language]}}
+                <span *ngIf="!item.mountedByUnitId && item.lastUnitId">
+                  ({{[unitData[item.lastUnitId].nameCN,unitData[item.lastUnitId].nameEN][language]}})
+                </span>
+                - {{showCooldown(item)}}
+              </h6>
+          </div>
+          <div class="col-12 text-center" style="padding: 8px;">
+            <ng-container>
+              <button class="jh-player-gear-equip btn btn-sm btn-info" (click)="clearCooldown(item)" 
+                  *ngIf="item.isMountable && inCooldown(item)">{{['解冻','R/CD'][language]}}</button>
+              <button class="jh-player-gear-equip btn btn-sm btn-light" (click)="mountItem(item.rId)"
+                  *ngIf="!item.mountedByUnitId && item.isMountable && !inCooldown(item)">{{['装备','Equip'][language]}}</button>
+              <button class="jh-player-gear-equip btn btn-sm btn-warning" (click)="recycle(item.itemId, item.rId)" *ngIf="!item.mountedByUnitId">{{['回收','Recycle'][language]}}</button>
+              <button class="jh-player-gear-unequip btn btn-sm btn-light" (click)="unmountItem(item.rId)" *ngIf="item.mountedByUnitId && item.isMountable">{{['卸下','Unequip'][language]}}</button>
+              <button class="jh-player-gear-unequip btn btn-sm btn-success" (click)="upgradeItem(item)" *ngIf="item.isMountable">{{['升级','Upgrade'][language]}}</button>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>
+
+<div style="position: absolute; bottom: 60px; right: 30px; z-index: 1; cursor: pointer;" (click)="showGearFilter()">
+  <i class="icon icon-zoomin" style="font-size: 30px;"></i>
+</div>
+
+<app-loading-box *ngIf="waiting"></app-loading-box>
+
+<app-player-recycle
+    #playerRecycle
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="showRecycleGear"
+    [profile]=profile
+    (onClose)="onClose()">
+</app-player-recycle>
+
+<app-gear-sell
+    #gearSell
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowGearSell"
+    [profile]=profile
+    (onClose)="onClose()">
+</app-gear-sell>
+
+<app-gear-upgrade
+    #gearUpgrade
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="showGearUpgrade"
+    [profile]=profile
+    [item]=itemToUpgrade
+    (onClose)="onClose()">
+</app-gear-upgrade>
+
+<app-player-gear-selection
+    #playerGearSelection
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowGearSelection"
+    [profile]=profile
+    (onSelect)="onSelect($event)"
+    (onClose)="onClose()">
+</app-player-gear-selection>
+
+<app-gear-recycle
+    #gearRecycle
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowGearRecycle"
+    [itemId]=recycleItemId
+    [itemWorth]=recycleItemWorth
+    (onRecycle)="onRecycle()"
+    (onClose)="onClose()">
+</app-gear-recycle>
+
+<app-gear-cooldown
+    #gearCooldown
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowGearCooldown"
+    [item]=itemInCooldown
+    (onPay)="onClearCooldown()"
+    (onClose)="onClose()">
+</app-gear-cooldown>
+
+<app-gear-synthesise
+    #synthesise
+    *ngIf="showSynthesise"
+    [profile]=profile
+    (onRefreshItems)="refreshItems($event)"
+    (onRefreshBottomBar)="refreshBottomBar($event)"
+    (onGoBack)="showSynthesise = false">
+</app-gear-synthesise>
+
+<app-market-item-info
+    #marketItemInfo
+    [itemRId]=itemInfoRId
+    [seller]=''
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowMarketItemInfo"
+    (onClose)="closeMarketItemInfo()">
+</app-market-item-info>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>
+
+<app-gear-filter
+  #gearFilter
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowGearFilter"
+  (onFilter)="filter($event)"
+  (onClose)="closeGearFilter()">
+</app-gear-filter>

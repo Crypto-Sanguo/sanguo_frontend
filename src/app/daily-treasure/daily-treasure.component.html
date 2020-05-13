@@ -1,0 +1,474 @@
+<div class="dailyTreasure">
+  <div class="row" style="margin: 0">
+    <div class="col">
+      <button class="btn btn-sm btn-primary" (click)="showRule()" *ngIf="tabIndex === 0">{{['游戏规则','Rules'][language]}}</button>
+      <span *ngIf="tabIndex === 2 && badLuck">{{['坏运','Bad Luck'][language]}}: {{ badLuck }}</span>
+    </div>
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['分红','Div.'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['抽奖','Lottery'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['坏运','Bad Luck'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 3}" (click)="showTab(3)">{{['其他','Other'][language]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 5px 0;" *ngIf="tabIndex === 0">
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-center">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/pot_of_gold.png">
+          </div>
+          <div class="col-6">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['持币分红','Hold to Earn'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['奖池','Pool'][language]}}: {{formatNumber(p1)}} <i class="icon-iost"></i></h6>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['开奖','Time'][language]}}:
+              <span>{{rHours | number : '2.0-0'}}:{{rMinutes | number : '2.0-0'}}:{{rSeconds | number : '2.0-0'}}</span>
+            </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['分母','All'][language]}}: {{formatNumber(d1)}} <i class="icon-sgt"></i></h6>
+            </div>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['分子','Mine'][language]}}: {{formatNumber(n1)}} <i class="icon-sgt"></i></h6>
+            </div>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['预计','Est'][language]}}: {{formatNumber(cDividendEst)}} <i class="icon-iost"></i></h6>
+          </div>
+          <div class="col-12 text-center" style="padding:15px 0 0 0;">
+            <button class="btn btn-primary btn-sm" type="button" (click)="showDividendOne()">{{['查看分红记录','View Earnings'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/pot_of_gold.png">
+          </div>
+          <div class="col-6">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['销毁分红','Burn to Earn'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['奖池','Pool'][language]}}: {{formatNumber(p2)}} <i class="icon-iost"></i></h6>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['开奖','Time'][language]}}:
+              <span>{{rHours | number : '2.0-0'}}:{{rMinutes | number : '2.0-0'}}:{{rSeconds | number : '2.0-0'}}</span>
+            </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['分母','All'][language]}}: {{formatNumber(d2)}} <i class="icon-sgt"></i></h6>
+            </div>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['分子','Mine'][language]}}: {{formatNumber(n2)}} <i class="icon-sgt"></i></h6>
+            </div>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['预计','Est'][language]}}: {{formatNumber(bDividendEst)}} <i class="icon-iost"></i></h6>
+          </div>
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="number" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="burnAmount" value="{{burnAmount}}" (keydown)="burnAmountValueChange()">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="burnAmountToZero()">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="burnAmountToMax()">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="burn()">{{['买入','Withdraw'][language]}}</button>
+            </div>
+          </div>
+        </div>
+        <ng-container *ngIf = "canShowDividendTwo">
+          <div class="card daily-treasure-overlay">
+          </div>
+          <button class="btn btn-primary btn-sm daily-treasure-button" type="button" (click)="showDividendTwo()">
+            {{['查看分红记录','View Earnings'][language]}}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-center">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/pot_of_gold.png">
+          </div>
+          <div class="col-6">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['攻城分红','Attack States to Earn'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['奖池','Pool'][language]}}: {{formatNumber(p3)}} <i class="icon-iost"></i></h6>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['开奖','Time'][language]}}:
+              <span>{{rHours | number : '2.0-0'}}:{{rMinutes | number : '2.0-0'}}:{{rSeconds | number : '2.0-0'}}</span>
+            </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['分母','All'][language]}}: {{formatNumber(d3)}} </h6>
+            </div>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['分子','Mine'][language]}}: {{n3}} </h6>
+            </div>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['预计','Est'][language]}}: {{formatNumber(n3 / d3 * p3)}} <i class="icon-iost"></i></h6>
+          </div>
+          <div class="col-12 text-center" style="padding:15px 0 0 0;">
+            <button class="btn btn-primary btn-sm" type="button" (click)="showDividendThree()">{{['查看分红记录','View Earnings'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-center">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/pot_of_gold.png">
+          </div>
+          <div class="col-6">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['土地分红','Owning Land to Earn'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['奖池','Pool'][language]}}: {{formatNumber(p4)}} <i class="icon-iost"></i></h6>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['开奖','Time'][language]}}:
+              <span>{{wHours | number : '2.0-0'}}:{{wMinutes | number : '2.0-0'}}:{{wSeconds | number : '2.0-0'}}</span>
+            </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['分母','All'][language]}}: {{formatNumber(d4)}} </h6>
+            </div>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['分子','Mine'][language]}}: {{n4}} </h6>
+            </div>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['预计','Est'][language]}}: {{formatNumber(n4 / d4 * p4)}} <i class="icon-iost"></i></h6>
+          </div>
+          <div class="col-12 text-center" style="padding:15px 0 0 0;">
+            <button class="btn btn-primary btn-sm" type="button" (click)="showDividendFour()">{{['查看分红记录','View Earnings'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="row" style="margin: 5px 0;" *ngIf="tabIndex === 1 && !waitingData">
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/heroes/liubei.jpg">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['抽奖 - 刘备','Lottery - Liu Bei'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['中奖率','Winning Chance'][language]}}: 3% </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['可用票数','Tickets'][language]}}: {{ticketAmountMax}}</h6>
+            </div>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(19)">{{['查看','View'][language]}}</button>
+          </div>
+          <ng-container *ngIf="!hasLiuBei">
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="text" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="ticketAmount0" value="{{ticketAmount0}}" (keydown)="ticketAmountValueChange(0)">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="ticketAmountToZero(0)">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="ticketAmountToMax(0)">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="drawUnit(19)">{{['抽奖','Draw'][language]}}</button>
+            </div>
+          </div>
+          </ng-container>
+          <div class="col-12" style="padding:10px 0 0 0;" *ngIf="hasLiuBei">
+            <span>{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+ 
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/heroes/caocao.jpg">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['抽奖 - 曹操','Lottery - Cao Cao'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['中奖率','Winning Chance'][language]}}: 2% </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['可用票数','Tickets'][language]}}: {{ticketAmountMax}}</h6>
+            </div>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(20)">{{['查看','View'][language]}}</button>
+          </div>
+          <ng-container *ngIf="!hasCaoCao">
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="text" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="ticketAmount1" value="{{ticketAmount1}}" (keydown)="ticketAmountValueChange(1)">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="ticketAmountToZero(1)">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="ticketAmountToMax(1)">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="drawUnit(20)">{{['抽奖','Draw'][language]}}</button>
+            </div>
+          </div>
+          </ng-container>
+          <div class="col-12" style="padding:10px 0 0 0;" *ngIf="hasCaoCao">
+            <span>{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/heroes/lvbu.jpg">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['抽奖 - 吕布','Lottery - Lv Bu'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['中奖率','Winning Chance'][language]}}: 1% </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['可用票数','Tickets'][language]}}: {{ticketAmountMax}}</h6>
+            </div>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(21)">{{['查看','View'][language]}}</button>
+          </div>
+          <ng-container *ngIf="!hasLvBu">
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="text" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="ticketAmount2" value="{{ticketAmount2}}" (keydown)="ticketAmountValueChange(2)">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="ticketAmountToZero(2)">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="ticketAmountToMax(2)">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="drawUnit(21)">{{['抽奖','Draw'][language]}}</button>
+            </div>
+          </div>
+          </ng-container>
+          <div class="col-12" style="padding:10px 0 0 0;" *ngIf="hasLvBu">
+            <span>{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/heroes/xiaoqiao.jpg">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['抽奖 - 小乔','Lottery - Xiao Qiao'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['中奖率','Winning Chance'][language]}}: 1% </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['可用票数','Tickets'][language]}}: {{ticketAmountMax}}</h6>
+            </div>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(40)">{{['查看','View'][language]}}</button>
+          </div>
+          <ng-container *ngIf="!hasXiaoQiao">
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="text" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="ticketAmount3" value="{{ticketAmount3}}" (keydown)="ticketAmountValueChange(3)">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="ticketAmountToZero(3)">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="ticketAmountToMax(3)">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="drawUnit(40)">{{['抽奖','Draw'][language]}}</button>
+            </div>
+          </div>
+          </ng-container>
+          <div class="col-12" style="padding:10px 0 0 0;" *ngIf="hasXiaoQiao">
+            <span>{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" src="/assets/images/heroes/yuanshao.jpg">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{['抽奖 - 袁绍','Lottery - Yuan Shao'][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{['中奖率','Winning Chance'][language]}}: 1% </h6>
+            <div class="text-left" style="margin-top:4px;">
+              <h6 class="card-subtitle text-left text-muted" style="margin-top:4px;">{{['可用票数','Tickets'][language]}}: {{ticketAmountMax}}</h6>
+            </div>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(39)">{{['查看','View'][language]}}</button>
+          </div>
+          <ng-container *ngIf="!hasYuanShao">
+          <div class="col-8" style="padding:10px 0 0 0;">
+            <div class="input-group" style="padding:8px; padding-bottom:0px; margin-top:-4px;">
+              <input type="text" class="form-control form-control-sm" placeholder="Amount" [(ngModel)]="ticketAmount4" value="{{ticketAmount4}}" (keydown)="ticketAmountValueChange(4)">
+              <div class="input-group-append">
+                <span class="input-group-text form-control-sm" style="width:20px; padding-left:4px; padding-right:4px;" (click)="ticketAmountToZero(4)">X</span>
+                <button class="btn btn-primary btn-sm" type="button" (click)="ticketAmountToMax(4)">{{['最大','Maximum'][language]}}</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-4" style="padding:10px 0 0 0;">
+            <div class="input-group" style="margin-top:4px; padding-right:8px;">
+              <button class="btn btn-sm btn-success" style="width:100%;" type="button" (click)="drawUnit(39)">{{['抽奖','Draw'][language]}}</button>
+            </div>
+          </div>
+          </ng-container>
+          <div class="col-12" style="padding:10px 0 0 0;" *ngIf="hasYuanShao">
+            <span>{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col" *ngIf="waitingData"><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+  </div>
+
+  <div class="row" style="margin: 5px 0;" *ngIf="tabIndex === 2 && !waitingData">
+    <div class="col-md-6 col-sm-12" style="padding: 4px;" *ngFor="let unit of unitsFromBadLuck">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" [src]="unit.imagePath">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{[unit?.nameCN,unit?.nameEN][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{unit.count}} {{['坏运','Bad Luck'][language]}}</h6>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(unit.unitId)">{{['查看','View'][language]}}</button>
+          </div>
+
+          <div class="col-12" style="padding:10px 0 0 0;">
+            <span *ngIf="unit?.owned">{{['已拥有','Owned'][language]}}</span>
+            <button class="btn btn-sm" [disabled]="badLuck * 1 < unit.count * 1" (click)="buyUnitWithBadLuck(unit.unitId)" *ngIf="!unit?.owned">{{['兑换','Redeem'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 col-sm-12" style="padding: 4px;" *ngFor="let item of itemsFromBadLuck">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" [src]="item.imagePath">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{[item?.nameCN,item?.nameEN][language]}}</h5>
+            <h6 class="card-subtitle text-left" style="margin-top:4px;">{{item.count}} {{['坏运','Bad Luck'][language]}}</h6>
+          </div>
+
+          <div class="col-12" style="padding:10px 0 0 0;">
+            <button class="btn btn-sm" [disabled]="badLuck * 1 < item.count * 1">{{['兑换','Redeem'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 5px 0;" *ngIf="tabIndex === 3 && !waitingData">
+    <div class="col-md-6 col-sm-12" style="padding: 4px;" *ngFor="let unit of unitsFromChannel">
+      <div class="card" style="margin: 4px; padding: 8px;">
+        <div class="row card-body text-center">
+          <div class="col-6 text-right">
+            <img class="daily-treasure-image" style="height:128px;" [src]="unit.imagePath">
+          </div>
+          <div class="col-6 text-left">
+            <h5 class="sanguo text-left" style="margin-top:-6px;">{{[unit?.nameCN,unit?.nameEN][language]}}</h5>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(unit.unitId)">{{['查看','View'][language]}}</button>
+          </div>
+
+          <div class="col-12" style="padding:10px 0 0 0;">
+            <span *ngIf="unit?.owned">{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin: 5px 0;" *ngIf="waitingData">
+    <div class="col" *ngIf="waitingData"><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+  </div>
+</div>
+
+<app-loading-box *ngIf="waiting"></app-loading-box>
+
+<app-treasure-rules
+    #treasureRules
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowRules"
+    (onClose)="closeRule()">
+</app-treasure-rules>
+
+<app-treasure-dividend-one
+    #treasureDividendOne
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowDividendOne"
+    [profile]=profile
+    (onClose)="closeDividendOne()">
+</app-treasure-dividend-one>
+
+<app-treasure-dividend-two
+    #treasureDividentTwo
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    [profile]=profile
+    *ngIf="willShowDividendTwo"
+    (onClose)="closeDividendTwo()">
+</app-treasure-dividend-two>
+
+<app-treasure-dividend-three
+    #treasureDividentThree
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    [profile]=profile
+    *ngIf="willShowDividendThree"
+    (onClose)="closeDividendThree()">
+</app-treasure-dividend-three>
+
+<app-treasure-dividend-four
+    #treasureDividentFour
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    [profile]=profile
+    *ngIf="willShowDividendFour"
+    (onClose)="closeDividendFour()">
+</app-treasure-dividend-four>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>
+
+<app-xmas-lottery
+  #xmasLottery
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowXmasLottery"
+  (onClose)="closeXmasLottery()">
+</app-xmas-lottery>
+
+<app-login-box
+  #loginBox
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowLoginBox"
+  [profile]="profile"
+  (onClose)="closeLoginBox()">
+</app-login-box>
+
+<app-market-info
+    #marketInfo
+    [unitId]=unitInfoId
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowMarketInfo"
+    (onClose)="closeMarketInfo()">
+</app-market-info>

@@ -1,0 +1,52 @@
+.jh-player-team {
+  height: 100%; 
+  width: 100%; 
+  z-index: 0; 
+  position: absolute;
+  top: 0;
+  overflow: auto;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.jh-player-team-container {
+  width: calc(100% - 48px);
+  margin: 14px 24px;
+}
+
+.jh-player-team .card {
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.jh-player-team h5 {
+  text-align: center;
+  margin: 0;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.jh-player-team img {
+  border-radius: 0.25rem;
+  width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-player-team-buttons {
+  padding: 10px 14px 0 14px;
+}
+
+.jh-player-team-container button {
+  margin: auto;
+}

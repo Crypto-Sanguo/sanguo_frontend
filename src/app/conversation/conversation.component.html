@@ -1,0 +1,59 @@
+<div class="jh-conversation" style="margin:0px; padding:0px; overflow-y: auto; overflow-x:hidden; position:absolute; width: 100%; height:100%; margin-bottom:0px; padding-bottom:0px;" (click)="talk()" *ngIf="!inBattle">
+  <ng-container *ngIf="!waiting">
+    <div class="card bg-primary jh-conversation-main">
+      <div class="row" style="margin-left:0px; margin-right:0px;">
+        <div class="col-md-3 col-sm-12 jh-conversation-hero text-center">
+          <img src={{npcImagePath}} style="max-width: 220px;">
+        </div>
+        <div class="col-md-9 col-sm-12 col-upgrades" style="padding: 8px;">
+          <h4 class="card-title jh-conversation-hero-name text-left">{{[npcNameCN,npcNameEN][language]}}</h4>
+          <h6 class="card-subtitle mb-2 text-left" style="margin-top:8px;">{{[npcTextCN,npcTextEN][language]}}</h6>
+        </div>
+      </div>
+      <div class="jh-conversation-arrow-down" *ngIf="talkStatus == 0">
+        <img src="/assets/images/arrow-down.gif" style="position:absolute; bottom: 0">
+      </div>
+    </div>
+    <div class="card bg-primary jh-conversation-answer" *ngIf="talkStatus == 1" (click)="startBattle()">
+      <h6 class="card-subtitle mb-2 text-center" style="margin-top:8px;">{{['开始战斗','Start battle'][language]}}</h6>
+    </div>
+    <div class="card bg-primary jh-conversation-answer" *ngIf="talkStatus == 1" (click)="quitBattle()">
+      <h6 class="card-subtitle mb-2 text-center" style="margin-top:8px;">{{['逃离战场','Quit battle'][language]}}</h6>
+    </div>
+  </ng-container>
+  <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+</div>
+
+<app-battle
+    #battle
+    *ngIf="inBattle"
+    [isDuel]=false
+    [profile]=profile
+    [battleField]=battleField
+    [battleRecord]=battleRecord
+    [unitLimit]=battleUnitLimit
+    (onFinish)="finishBattle($event)">
+</app-battle>
+
+<app-team-selection
+    #teamSelection
+    *ngIf="showTeamSelection"
+    [stageIndex]=stageIndex
+    [placeIndex]=placeIndex
+    [battleIndex]=battleIndex
+    [profile]=profile
+    (onSelect)="onSelectTeam($event)"
+    (onClose)="onFinishTeam()"
+    (onSetTeams)="setTeams($event)">
+</app-team-selection>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

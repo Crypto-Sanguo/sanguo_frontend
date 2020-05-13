@@ -1,0 +1,38 @@
+<div class="footer" style="-webkit-transform:translateZ(0); transform:translateZ(0);">
+  <div class="container-fluid bg-primary footer-content bg">
+    <div class="row footer-inner">
+      <div class="col text-center" style="padding:0px;">
+        <div class="text-center" style="display: -webkit-inline-box; margin-top:-2px;">
+          <div>
+            <h5 style="margin-top:2px; margin-bottom:0px; margin-left:8px;" class="text-warning">
+              {{formatNumber(this.profile.balance || 0)}}
+              <i class="icon-sgt"></i>
+            </h5>
+          </div>
+        </div>
+      </div>
+      <div class="col text-center" style="padding:0px; margin-bottom:4px;">
+        <div class="text-center" style="display: -webkit-inline-box;">
+          <h5 style="margin-bottom:2px;">{{['分红:','Div.'][language]}}
+            {{formatNumber(this.profile.dividend || 0)}}
+            <i class="icon-iost"></i>
+          </h5>
+        </div>
+      </div>
+      <div class="col text-center" style="padding:0px;">
+        <div class="text-center" style="display: -webkit-inline-box;white-space: nowrap;">
+          <button class="btn btn-sm btn-secondary"
+              style="margin-left:8px; margin-top:-5px; margin-bottom:-3px;" (click)="openAssetManagement()">
+            {{['资产','Assets'][language]}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-asset-management #assetManagement
+  *ngIf="showAssetManagement"
+  [profile]="profile"
+  (onClose)="onCloseAssetManagement()">
+</app-asset-management>

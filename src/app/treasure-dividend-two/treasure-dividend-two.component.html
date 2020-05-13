@@ -1,0 +1,22 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-treasure-dividend-two-outerbox">
+    <div class="modal-content" style="min-width: 220px;">
+      <div class="modal-header">
+        <h5 class="modal-title sanguo">{{['销毁分红','Burn to Earn'][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body" style="white-space: nowrap;">
+        <ng-container *ngIf="!waiting">
+          <div class="row" *ngFor="let data of dataArray">
+            <div class="col-6 text-center">{{data.year}}-{{data.month | number : '2.0-0'}}-{{data.day | number : '2.0-0'}}</div>
+            <div class="col-6 text-center">{{formatNumber(data.dividend)}} <i class="icon-iost"></i></div>
+          </div>
+        </ng-container>
+        <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: 0px auto; display: block; width: 80px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="jh-treasure-dividend-two-background" (click)="close()"></div>
+</div>

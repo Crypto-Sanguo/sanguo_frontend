@@ -1,0 +1,15 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-dashboard-message-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{[titleCN,titleEN][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" [innerHTML]="[bodyCN,bodyEN][language]">
+      </div>
+    </div>
+  </div>
+  <div class="jh-dashboard-message-background" (click)="close()"></div>
+</div>

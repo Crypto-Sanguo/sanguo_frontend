@@ -1,0 +1,19 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-dual-rules-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{[nameCN,nameEN][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" *ngIf="!waiting">
+        <p>{{['基础数值: ','Basic Status: '][language]}}{{['血量 ', 'HP '][language]}}{{[heroHp]}}{{[', 攻击 ', ', ATK '][language]}}{{[heroAttack]}}{{[', 智力 ', ', INT '][language]}}{{[heroIntelligence]}}{{[', 防御 ', ', DEF '][language]}}{{[heroDefense]}}{{[', 敏捷 ', ', AGI '][language]}}{{[heroAgility]}}{{[', 运气 ', ', LUCK '][language]}}{{[heroLuck]}}</p>
+        <p>{{['每级递增: ','Per Level: '][language]}}{{['血量 ', 'HP '][language]}}{{[heroHpStep]}}{{[', 攻击 ', ', ATK '][language]}}{{[heroAttackStep]}}{{[', 智力 ', ', INT '][language]}}{{[heroIntelligenceStep]}}{{[', 防御 ', ', DEF '][language]}}{{[heroDefenseStep]}}{{[', 敏捷 ', ', AGI '][language]}}{{[heroAgilityStep]}}{{[', 运气 ', ', LUCK '][language]}}{{[heroLuckStep]}}</p>
+        <p>{{['技能: ','Skill: '][language]}}{{[descriptionCN, descriptionEN][language]}}</p>
+      </div>
+      <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: 10px auto; display: block; width: 80px;"></div>
+    </div>
+  </div>
+  <div class="jh-dual-rules-background" (click)="close()"></div>
+</div>

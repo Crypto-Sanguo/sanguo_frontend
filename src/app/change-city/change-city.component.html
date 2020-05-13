@@ -1,0 +1,35 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+
+  <div class="jh-change-city">
+    <div class="card jh-change-city-outerbox" *ngIf="waiting">
+      <img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;">
+    </div>
+
+    <div class="card jh-change-city-outerbox" *ngIf="!waiting">
+      <h5 class="title" style="text-align: center; margin-top: 20px;">{{['更换土地到新的城池','Relocate land to a new state'][language]}}</h5>
+      <h6 style="text-align: center; margin-top: 20px;">{{['每日可更换一次','You can do it once per day'][language]}}</h6>
+
+      <div class="jh-change-city-option">
+        <div class="row">
+          <div class="col-4" *ngFor="let city of allCities; index as i">
+            <input type="radio"
+                name="radio-name"
+                id="radio-{{i}}"
+                [(ngModel)]="selectedCityId"
+                [value]="city.cityId"
+                style="margin: 5px;"
+                required
+               />
+            <label style="margin:0" for="radio-{{i}}">{{cityIdToCityName(city.cityId)[language]}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="jh-change-city-buttons">
+        <button class="btn btn-sm btn-light" style="margin: 5px;" (click)="changeCity(selectedCityId)" [disabled]="!selectedCityId">{{['确定','Confirm'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+      </div>
+    </div>
+  </div>
+</div>

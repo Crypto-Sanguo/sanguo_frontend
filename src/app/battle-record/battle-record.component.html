@@ -1,0 +1,49 @@
+<div style="height: 100%; width: 100%; z-index: 1; position: absolute;">
+  <div class="jh-battle-record-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{["战斗记录","Battle Records"][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" style="max-height: 380px; overflow-y: auto;" *ngIf="!waitingForHistory">
+        <ng-container *ngFor="let record of history">
+          <h6 *ngIf="record[1]">
+            {{[timeAsCN(record[3]), timeAsEN(record[3])][language]}}, {{['您进攻了','You attacked'][language]}}
+            <a href="javascript:void(0)" class="text-muted mx-none" (click)="showUserLandInfo(record[0])">{{record[0]}}</a>
+
+            <ng-container *ngIf="record[2]">, <span class="text-success">{{['获胜','won'][language]}}</span>{{['并得到',' and snatched'][language]}} <span class="text-warning">{{record[4]}} <i class="icon-sgt"></i></span></ng-container>
+            <ng-container *ngIf="!record[2]">, {{['无功而返','and got nothing'][language]}}</ng-container>
+          </h6>
+          <h6 *ngIf="!record[1]">
+            {{[timeAsCN(record[3]),timeAsEN(record[3])][language]}}, {{['您被','You were attacked by '][language]}}
+            <a href="javascript:void(0)" class="text-muted mx-none" (click)="showUserLandInfo(record[0])">{{record[0]}}</a>
+
+            <ng-container *ngIf="record[2]">{{['',', '][language]}}<span class="text-danger">
+              {{['击败','defeated'][language]}}</span>{{[', 损失',' and lost'][language]}} <span class="text-warning">{{record[4]}} <i class="icon-sgt"></i></span>
+            </ng-container>
+            <ng-container *ngIf="!record[2]"> {{['攻击, 防守成功',', and defended successfully'][language]}}</ng-container>
+          </h6>
+        </ng-container>
+      </div>
+
+      <div class="modal-body text-left" style="max-height: 380px; overflow-y: auto;" *ngIf="waitingForHistory">
+        <img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;">
+      </div>
+    </div>
+  </div>
+  <div class="jh-battle-record-background" (click)="close()"></div>
+</div>
+
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

@@ -1,0 +1,42 @@
+<div class="container-fluid bg" style="height:100%; min-height:100%; padding:0px;">
+  <app-top-bar #topBar
+      (onChangeLanguage)="changeLanguageByEvent($event)"
+      (onGotoTab)="gotoTab($event)"
+      (onToggleStatus)="onToggleStatus($event)"
+      (onShowWechatBox)="showWechatBox()">
+  </app-top-bar>
+  <ng-container>
+    <div class="row" style="padding:0px; margin:0px; margin-top:57px; margin-bottom:0px; height:100%; width:100%;" *ngIf="!waiting">
+      <div class="col" [ngClass]="{'d-none d-xl-block':!showStatus}" style="margin-bottom:0px; padding:0px; margin-bottom:110px; border-right: 1px solid rgba(0, 0, 0, 0.6);">
+        <app-dashboard #dashboard
+            [profile]=profile
+            (onTopBarGotoTab)="topBarGotoTab($event)"
+            (onRefreshEnergy)="refreshEnergy($event)"
+            (onShowWechatBox)="showWechatBox()">
+        </app-dashboard>
+      </div>
+      <div class="col" [ngClass]="{'d-none d-xl-block':showStatus}" style="margin-bottom: 110px; margin-top: 0px; padding: 0px;">
+        <app-right-side #rightSide
+            [tabId]=tabId
+            [profile]=profile
+            (onSetTeams)="onSetTeams($event)">
+        </app-right-side>
+      </div>
+    </div>
+    <div class="row" style="padding:0px; margin:0px; margin-top:57px; margin-bottom:0px; height:100%; width:100%; display: flow-root;" *ngIf="waiting">
+      <div class="col" style="margin-bottom:0px; padding:0px; margin-bottom:110px;">
+        <img src="/assets/images/loading.gif" style="margin: 200px auto; display: block; width: 80px;">
+      </div>
+    </div>
+    <app-bottom-bar #bottomBar
+        [profile]=profile>
+    </app-bottom-bar>
+  </ng-container>
+</div>
+
+<app-wechat-box
+  #wechatBox
+  style="height: 100%; width: 100%; z-index: 101; position: absolute; top: 0"
+  *ngIf="willShowWechatBox"
+  (onClose)="closeWechatBox()">
+</app-wechat-box>

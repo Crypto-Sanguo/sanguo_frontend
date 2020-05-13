@@ -1,0 +1,25 @@
+<div style="height: 100%; width: 100%; z-index: 13; position: absolute;">
+  <div class="jh-tax-record-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{["最新50条缴税记录","Tax Record (Last 50)"][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" style="max-height: 380px; overflow-y: auto;" *ngIf="!waiting">
+        <ul class="list-group">
+          <li class="list-group-item text-left align-items-center jh-tax-record-one" *ngFor="let record of taxRecords">
+            <h6 class="jh-tax-record-body">
+              <span class="text-info">{{record[0]}}</span>{{['缴税',' paid '][language]}}<span class="sanguo">{{record[1]}} <i class="icon-sgt"></i></span>
+            </h6>
+          </li>
+        </ul>
+      </div>
+      <div class="modal-body text-left" style="max-height: 380px; overflow-y: auto;" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;">
+      </div>
+    </div>
+  </div>
+  <div class="jh-tax-record-background" (click)="close()"></div>
+</div>

@@ -1,0 +1,98 @@
+<div class="jh-gear-synthesise">
+  <div class="row" style="margin:12px 20px;padding:6px 9px 2px 4px;">
+    <div class="col text-left">
+      <button class="btn btn-sm btn-primary" (click)="goBack()">{{['返回','Back'][language]}}</button>
+    </div>
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabId === 0}" (click)="gotoTab(0)">{{['可合成','Available'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabId === 1}" (click)="gotoTab(1)">{{['待合成','Pending'][language]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin:13px 15px;" *ngIf="tabId === 0">
+    <div class="jumbotron text-center" style="width: 100%; margin:8px; padding:8px;" *ngIf="currentList.length===0">
+      <h6 style="margin-top:8px;">{{['您还没有可合成的装备','You don\'t have synthesizable items yet'][language]}}</h6>
+    </div>
+    <div class="jh-gear-synthesise-one col-md-6 col-sm-12" *ngFor="let item of currentList">
+      <div class="card row" style="padding: 8px;margin: 0px;width: 100%;flex-direction: row;">
+        <div class="col-6">
+          <img [src]="item.imagePath" class="jh-gear-synthesise-image">
+        </div>
+        <div class="col-6 jh-gear-synthesise-info">
+          <h4 class="card-title text-center sanguo">{{[item.nameCN,item.nameEN][language]}}</h4>
+          <button class="btn btn-sm btn-primary" (click)="showGearInfo(item)">{{['查看','View'][language]}}</button>
+          <div class="jh-gear-synthesise-button">
+            <button class="btn btn-sm btn-light" (click)="synthesize(item)">
+            {{['合成','Synthesize'][language]}}
+            </button>
+          </div>
+        </div>
+        <div class="col card jh-gear-synthesise-innerbox bg-primary">
+          <h6 class="text-center" style="margin: 0;">{{['所需材料','Requirements'][language]}}</h6>
+          <div class="row">
+            <div class="col-4" *ngFor="let c of item.components">
+              <div class="text-center text-success" style="margin-top: 6px;" *ngIf="c.ready">
+                {{[c.nameCN,c.nameEN][language]}} {{c.existing}} / {{c.count}}
+              </div>
+              <div class="text-center text-danger" style="margin-top: 6px;" *ngIf="!c.ready">
+                {{[c.nameCN,c.nameEN][language]}} {{c.existing}} / {{c.count}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin:13px 15px;" *ngIf="tabId === 1">
+    <div class="jh-gear-synthesise-one col-md-6 col-sm-12" *ngFor="let item of futureList">
+      <div class="card row" style="padding: 8px;margin: 0px;width: 100%;flex-direction: row;">
+        <div class="col-6">
+          <img [src]="item.imagePath" class="jh-gear-synthesise-image">
+        </div>
+        <div class="col-6 jh-gear-synthesise-info">
+          <h4 class="card-title text-center sanguo">{{[item.nameCN,item.nameEN][language]}}</h4>
+          <button class="btn btn-sm btn-primary" (click)="showGearInfo(item)">{{['查看','View'][language]}}</button>
+          <div class="jh-gear-synthesise-button">
+          </div>
+        </div>
+        <div class="col card jh-gear-synthesise-innerbox bg-primary">
+          <h6 class="text-center" style="margin: 0;">{{['所需材料','Needs'][language]}}</h6>
+          <div class="row">
+            <div class="col-4" *ngFor="let c of item.components">
+              <div class="text-center text-success" style="margin-top: 6px;" *ngIf="c.ready">
+                {{[c.nameCN,c.nameEN][language]}} {{c.existing}} / {{c.count}}
+              </div>
+              <div class="text-center text-danger" style="margin-top: 6px;" *ngIf="!c.ready">
+                {{[c.nameCN,c.nameEN][language]}} {{c.existing}} / {{c.count}}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-loading-box *ngIf="waiting"></app-loading-box>
+
+<app-gear-info
+    #gearInfo
+    [item]=itemToShow
+    style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+    *ngIf="willShowGearInfo"
+    (onClose)="onClose()">
+</app-gear-info>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="onClose()">
+</app-alert-message>

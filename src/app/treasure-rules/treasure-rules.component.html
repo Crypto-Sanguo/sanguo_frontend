@@ -1,0 +1,22 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-treasure-rules-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{['游戏规则','Rules'][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <p>什么？玩游戏还能赚钱？</p>
+        <p>是的你没听错。在这个游戏中，我们将把80%的收益以分红的形式返还给玩家（具体可参照我们的白皮书）。</p>
+        <p>我们的收益包括：官方出售英雄的收入，玩家恢复英雄体力的花费，和交易市场中我们抽取的手续费。以上的全部收益的80%每一天都会进入一个奖池。我们将对这个奖池中的IOST通过三种不同的规则无保留的返回给大家。</p>
+        <p>规则一：持币分红，顾名思义，你持有的 <i class="icon-sgt sanguo"></i> 越多，那么你在每一天获得的分红也就越多。躺赚就是这么简单。</p>
+        <p>规则二：烧币分红。在这个奖池里，你烧毁的 <i class="icon-sgt sanguo"></i> 越多，那么你能从该奖池获得的分红也越多。</p>
+        <p>规则三：战力分红。在这个奖池里，你的英雄战力 <i class="icon-sgt sanguo"></i> 越多，那么你能从该奖池获得的分红也越多。</p>
+        <p>那么问题来了。作为玩家，你是该多持币，还是多烧币，还是多养英雄呢? 这个问题，欢迎大家在我们的官方社区讨论。</p>
+      </div>
+    </div>
+  </div>
+  <div class="jh-treasure-rules-background" (click)="close()"></div>
+</div>

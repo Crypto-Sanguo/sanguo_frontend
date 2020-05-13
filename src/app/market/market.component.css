@@ -1,0 +1,54 @@
+.jh-market {
+  margin:0px; 
+  overflow-y: auto; 
+  overflow-x:hidden; 
+  width: 100%;
+  padding: 15px 16px; 
+  height: 100%; 
+  margin-bottom:0px; 
+  padding-bottom:0px;
+  position: absolute;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.jh-market-img {
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-market-one {
+  margin: 4px; 
+  padding: 8px; 
+  flex-direction: row;
+}
+
+.jh-market-name {
+  color: #fd7e14;
+  margin: 0 0 5px 0;
+}
+
+.jh-market-one-img {
+  padding: 8px;
+}
+
+.jh-market-one-img img{
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none; 
+  -webkit-user-drag: none;
+}

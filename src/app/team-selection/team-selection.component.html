@@ -1,0 +1,98 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+  <div class="jh-team-selection">
+    <div class="card jh-team-selection-outerbox" *ngIf="this.isStepOne">
+      <h5 class="title" style="text-align: center; margin-top: 20px;">{{['敌人','Enemies'][language]}}</h5>
+      <ng-container *ngIf="hasTeam">
+        <div class="jh-team-selection-innerbox">
+          <div class="row jh-team-selection-box">
+            <ng-container *ngFor="let unit of opponentArray">
+              <div class="col-4" *ngIf="unit">
+                <img [src]="unit.imagePath" class="jh-team-selection-img">
+              </div>
+              <div class="col-4" *ngIf="!unit">
+                <img src="/assets/images/bg.png" class="jh-team-selection-img">
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <div class="card bg-primary jh-team-selection-item-drop-box">
+          <div class="jh-team-selection-item-drop-title">
+            <h6>{{['概率掉落','may drop'][language]}}</h6>
+          </div>
+          <div class="row jh-team-selection-item-drop">
+            <div class="col-4">
+              <img src="/assets/images/token.jpg">
+            </div>
+            <div class="col-4">
+              <img [src]="dropItemImagePath0" *ngIf="dropItemImagePath0">
+              <span class="jh-team-selection-chance" *ngIf="dropItemChance0">{{dropItemChance0}}%</span>
+            </div>
+            <div class="col-4">
+              <img [src]="dropItemImagePath1" *ngIf="dropItemImagePath1">
+              <span class="jh-team-selection-chance" *ngIf="dropItemChance1">{{dropItemChance1}}%</span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+      <div class="jh-team-selection-innerbox" *ngIf="!hasTeam">
+        <p>{{['您还没有可以出战的队列，请先','You do not have team yet, please '][language]}}<a href="javascript:void(0)" (click)="setTeams()">{{['配置','configurate'][language]}}</a></p>
+      </div>
+      <div class="row jh-team-selection-button">
+        <button class="btn btn-sm btn-light" style="margin: 5px;" (click)="this.isStepOne = false" *ngIf="hasTeam">{{['下一步','Next'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" *ngIf="!hasTeam" (click)="reload()">{{['刷新','Refresh'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+      </div>
+    </div>
+    <div class="card jh-team-selection-outerbox-second" *ngIf="!this.isStepOne">
+      <h5 class="title" style="text-align: center; margin-top: 20px;">{{['请选择出战的队伍','Please select your team'][language]}}</h5>
+      <ng-container *ngIf="hasTeam">
+        <div class="jh-team-selection-option">
+          <div class="row">
+          <div class="col-4" *ngFor="let i of [0,1,2,3,4,5,6,7,8]">
+            <input type="radio"
+                name="radio-team"
+                id="radio-{{i}}"
+                [(ngModel)]="selectedTeamIndex"
+                [value]="i"
+                style="margin: 5px;"
+                [disabled]="!teamArray[i]"
+                required
+               />
+            <label style="margin:0" for="radio-{{i}}">{{['队列','Team'][language]}} {{i + 1}}
+            </label>
+          </div>
+          </div>
+
+        </div>
+        <div class="jh-team-selection-innerbox">
+          <div class="row jh-team-selection-box">
+            <ng-container *ngFor="let unit of teamArray[selectedTeamIndex]">
+              <div class="col-4" *ngIf="unit">
+                <img [src]="unit.imagePath" class="jh-team-selection-img">
+                <div class="text-center" [ngClass]="{'text-danger':unit.noEnergy}" style="margin-top: 6px;">
+                  {{['体力','Stamina'][language]}} {{showEnergy(unit.index)}} / 10
+                </div>
+              </div>
+              <div class="col-4" *ngIf="!unit">
+                <img src="/assets/images/bg.png" class="jh-team-selection-img">
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+      <div class="jh-team-selection-innerbox" *ngIf="!hasTeam">
+        <p>{{['您还没有可以出战的队列，请先','You do not have team yet, please '][language]}}<a href="javascript:void(0)" (click)="setTeams()">{{['配置','configurate'][language]}}</a></p>
+      </div>
+      <div class="row jh-team-selection-button">
+        <button class="btn btn-sm btn-light" style="margin: 5px;" *ngIf="hasTeam" (click)="select(selectedTeamIndex, 0)">{{['参战','Battle'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" *ngIf="!hasTeam" (click)="reload()">{{['刷新','Refresh'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+        <button class="btn btn-sm btn-warning" style="margin: 5px;" *ngIf="hasTeam && stageIndex >= 0"
+            (click)="select(selectedTeamIndex, 1)">{{['扫荡','Batch'][language]}} 3 <span class="icon-iost"></span></button>
+      </div>
+    </div>
+    <div class="jh-team-selection-background" (click)="close()">
+    </div>
+  </div>
+</div>

@@ -1,0 +1,303 @@
+<div class="dashboard" *ngIf="!showUnits&&!showItems&&!showTeams&&!willShowLandLand">
+  <div class="dashboard-box" style="margin: 15px 23px;">
+    <div class="row" style="margin: 2px 0 17px 0" *ngIf="profile.walletReady">
+      <div class="col-auto text-left">
+        <button class="btn btn-sm btn-primary" style="margin-right: 10px;" (click)="gotoNotifications()">
+          <i class="icon-envelope1"></i>
+          <ng-container *ngIf="!profile.notificationsLoading">({{profile.notifications ? profile.notifications.length : 0}})</ng-container>
+          <i class="icon-spinner spinner" *ngIf="profile.notificationsLoading && profile.hasStarted"></i>
+        </button>
+      </div>
+      <div class="col text-right">
+        <button class="btn btn-sm btn-primary" style="margin-right: 4px;" (click)="gotoUnits()">
+          <i class="icon-face"></i>
+          <ng-container *ngIf="!profile.unitsLoading">({{profile.units ? profile.units.length : 0}})</ng-container>
+          <i class="icon-spinner spinner" *ngIf="profile.unitsLoading && profile.hasStarted"></i>
+        </button>
+        <button class="btn btn-sm btn-primary" style="margin-right: 4px;" (click)="gotoItems()">
+          <i class="icon-shield"></i>
+          <ng-container *ngIf="!profile.itemsLoading">({{profile.items ? profile.items.length : 0}})</ng-container>
+          <i class="icon-spinner spinner" *ngIf="profile.itemsLoading && profile.hasStarted"></i>
+        </button>
+        <button class="btn btn-sm btn-primary" (click)="gotoTeams(0)">
+          <i class="icon-users"></i>
+          <ng-container *ngIf="!profile.unitsLoading">({{teamCount}})</ng-container>
+          <i class="icon-spinner spinner" *ngIf="profile.unitsLoading && profile.hasStarted"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="card" style="margin:13px 0 6px 0; padding:8px;min-height: 120px" *ngIf="profile.walletReady">
+      <div class="row" *ngIf="profile.hasStarted">
+        <div class="col-md-4 col-sm-12 text-center" style="padding: 20px 0; margin: auto;" *ngIf="profile.units.length <= 0 && !profile.unitsLoading">
+          <h6 class="text-info" style="margin-top:8px; margin-bottom:22px;">{{['您还尚未获得任何英雄','You don\'t have heroes yet'][language]}}</h6>
+          <button class="btn btn-sm btn-primary" (click)="topBarGotoTab(2)">{{['点击此处获取','Click here to obtain'][language]}}</button>
+        </div>
+        <div class="col-md-4 col-sm-12 text-center" style="padding: 20px 0; margin: auto;" *ngIf="profile.units.length > 0 || profile.unitsLoading">
+          <h5 style="margin-bottom: 20px;">{{['您的战力排名','Your power ranking'][language]}}:</h5>
+          <h5 class="sanguo" style="margin-bottom: 20px;min-height: 22px;">
+             <ng-container *ngIf="!isLoadingDefense">#{{profile.stat && profile.stat.rank_power ? profile.stat.rank_power : ""}}</ng-container>
+          </h5>
+          <button class="btn btn-sm btn-light" style="margin: 5px;" *ngIf="!canEdit" (click)="edit()">{{['防守','Def'][language]}}</button>
+          <button class="btn btn-sm btn-light" style="margin: 5px;" *ngIf="!canEdit" (click)="showLandLand()">{{['屯田','Land'][language]}}</button>
+          <button class="btn btn-sm btn-light" style="margin: 5px;" *ngIf="!canEdit" (click)="gotoBattleRecord()">{{['日志','Logs'][language]}}</button>
+          <button class="btn btn-sm btn-light" style="margin: 5px;" *ngIf="canEdit" (click)="saveEdit()">{{['保存','Save'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px;" *ngIf="canEdit" (click)="cancelEdit()">{{['取消','Cancel'][language]}}</button>
+        </div>
+        <div class="col-md-8 col-sm-12">
+          <div class="row" style="margin: 20px 0 20px 0;">
+            <div class="col-4" style="padding: 0 5px;" *ngFor="let unitId of profile.defense; index as i">
+              <img [src]="getUnitImagePath(unitId)" style="width:100%; border-radius: 0.25rem;">
+              <div class="row" style="padding: 10px 18px 0 18px;" *ngIf="canEdit">
+                <button class="btn btn-sm btn-light" style="margin:auto;" (click)="addUnit(i)" *ngIf="!unitId">{{['添加','Add'][language]}}</button>
+                <button class="btn btn-sm btn-light" style="margin:auto;" (click)="changeUnit(i)" *ngIf="unitId">{{['更改','Edit'][language]}}</button>
+                <button class="btn btn-sm btn-light" style="margin:auto;" (click)="removeUnit(i)" *ngIf="unitId">{{['移除','Del'][language]}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin: auto 0;" *ngIf="!profile.hasStarted">
+        <div class="col-md-6 col-sm-12 text-center" style="margin: auto;padding: 6px;">
+          <h4 class="text-info">{{['创建账号','Create an account'][language]}}</h4>
+          <h6>{{['开启您的三国霸业','Start your journey in Crypto Sanguo'][language]}}</h6>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <div class="input-group">
+            <div class="col-sm-12" style="padding: 11px 16px 0 10px">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control form-control-sm" [placeholder]="['推荐码(选填)','Referral code (optional)'][language]" [(ngModel)]="referredBy" value="{{referredBy}}">
+              </div>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="col-sm-8" style="padding: 0px 16px 10px 10px">
+              <button class="input-btn btn btn-sm btn-primary" style="width:100%; margin-top: 10px;" type="button" (click)="startGame()">{{['开始游戏','Create my profile'][language]}}</button>
+            </div>
+          </div>
+            <div style="padding: 0px 16px" class="text-danger">
+              {{errorMessage}}
+            </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div style="font-size: 14px; text-align: center">
+      <a class="gold" href="javascript:void(0)" (click)="showReferralProgram()">{{["邀请好友 -> 赚取佣金","Invite Friends -> Earn IOST"][language]}}</a>
+    </div>
+
+    <div class="dashboard-advertisement d-none d-sm-block">
+      <img src="/assets/images/promotion.jpg">
+    </div>
+
+
+    <div class="row d-flex d-md-none " style="padding: 0 7px;">
+      <div class="col" style="padding: 8px;">
+        <h6 style="margin: 12px 14px;">{{['入群聊天','Join the Chat'][language]}}</h6>
+        <div class="card text-center" style="display: block;">
+          <a href="javascript:void(0)" style="width:fit-content; padding:20px; display:inline-block;" (click)="showWechatBox()">
+            <img class="navbar-left" src="/assets/images/wechat.png" style="max-height: 32px;">
+          </a>
+          <a target="_blank" href="https://discord.gg/v5cqs52" style="width:fit-content; padding:20px; display:inline-block">
+            <img class="navbar-left" src="/assets/images/discord.png" style="max-height: 32px;">
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="padding: 0 7px;">
+      <div class="col-md-6 col-sm-12" style="padding: 8px;">
+        <h6 style="margin: 12px 14px;">{{['预售攻略','Player\'s Guide'][language]}}</h6>
+        <div class="card">
+          <ul class="list-group" style="padding: 10px 0;">
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://bihu.com/article/1022817713" target="_blank" *ngIf="language==0">
+                  游戏开服公告
+                </a>
+                <a href="https://bihu.com/article/1022817713" target="_blank" *ngIf="language==1">
+                  Official Product Launch Announcement
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-09-10</h6>
+            </li>
+
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://bihu.com/article/1155118056" target="_blank" *ngIf="language==0">
+                  官方预售指南
+                </a>
+                <a href="https://medium.com/@cryptosanguo/crypto-sanguos-official-presale-guideline-8a2ad578f408" target="_blank" *ngIf="language==1">
+                  Official Presale Guideline
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-08-31</h6>
+            </li>
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://bihu.com/article/1315441603" target="_blank" *ngIf="language==0">
+                  游戏入门攻略
+                </a>
+                <a href="https://medium.com/@cryptosanguo/crypto-sanguo-introduction-to-the-game-d0f94f3adde6" target="_blank" *ngIf="language==1">
+                  Introduction to the Game
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-08-31</h6>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12" style="padding: 8px;">
+        <h6 style="margin: 12px 14px;">{{['媒体报道','Featured in'][language]}}</h6>
+        <div class="card">
+          <ul class="list-group" style="padding:10px 0;">
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://www.jinse.com/blockchain/453002.html" target="_blank" *ngIf="language==0">
+                  《加密三国志》Pu：用一款真正的三国游戏验证区块链的想象空间
+                </a>
+                <a href="https://www.jinse.com/blockchain/453002.html" target="_blank" *ngIf="language==1">
+                  Interview of Pu: Build a real blockchain game.
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-08-30</h6>
+            </li>
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://steemit.com/cn/@fundurian/iost" target="_blank" *ngIf="language==0">
+                  让三国迷沉迷的IOST链游《加密三国志》
+                </a>
+                <a href="https://steemit.com/cn/@fundurian/iost" target="_blank" *ngIf="language==1">
+                  Crypto Sanguo is for Sanguo lovers.
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-08-26</h6>
+            </li>
+            <li class="list-group-item text-left align-items-center dashboard-recent-news">
+              <h6>
+                <a href="https://mp.weixin.qq.com/s?__biz=MzI5ODM2MDY0OQ==&mid=2247483773&idx=1&sn=44938cfa7342145a494618c72977c667" target="_blank" *ngIf="language==0">
+                  IOST加密三国志即将首发上线！
+                </a>
+                <a href="https://mp.weixin.qq.com/s?__biz=MzI5ODM2MDY0OQ==&mid=2247483773&idx=1&sn=44938cfa7342145a494618c72977c667" target="_blank" *ngIf="language==1">
+                  A new game on IOST platform: Crypto Sanguo
+                </a>
+              </h6>
+              <h6 class="jh-dashboard-time"><i class="fas fa-clock"></i> 2019-08-24</h6>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="padding: 7px;">
+      <div class="col-12" style="padding: 8px;">
+        <h6 style="margin: 12px 14px;">{{['合作伙伴','Partners'][language]}}</h6>
+        <div class="dashboard-partners">
+          <img src="/assets/images/partners/00.png">
+          <img src="/assets/images/partners/07.png">
+          <img src="/assets/images/partners/01.png">
+          <img src="/assets/images/partners/02.png">
+          <img src="/assets/images/partners/03.png">
+          <img src="/assets/images/partners/04.png">
+          <img src="/assets/images/partners/05.png">
+          <img src="/assets/images/partners/06.png">
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<app-loading-box *ngIf="waiting"></app-loading-box>
+
+<app-land-land
+    #landLand
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowLandLand"
+    [profile]=profile
+    [cityId]="0"
+    (onGoBack)="closeLandLand()">
+</app-land-land>
+
+<app-player-gear-selection
+    #playerGearSelection
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowSelection"
+    [profile]=profile
+    (onSelect)="onSelect($event)"
+    (onClose)="onClose()">
+</app-player-gear-selection>
+
+<app-player-profile
+    #playerProfile
+    *ngIf="showUnits"
+    [profile]=profile
+    (onRefreshEnergy)="refreshEnergyAction($event)"
+    (onRefreshBottomBar)="refreshBottomBar($event)"
+    (onGoBack)="showUnits = false">
+</app-player-profile>
+
+<app-player-gear
+    #playerGear
+    *ngIf="showItems"
+    [profile]=profile
+    (onGoBack)="showItems = false"
+    (onRefreshBottomBar)="refreshBottomBar($event)"
+    (onRefreshItems)="loadItems()"
+    (onRefreshUnits)="loadUnits()">
+</app-player-gear>
+
+<app-player-team
+    #playerTeam
+    *ngIf="showTeams"
+    [initialTabIndex]="showTeamsTabIndex"
+    [profile]=profile
+    (onGoBack)="afterSetTeams()">
+</app-player-team>
+
+<app-dashboard-message
+    #dashboardMessage
+    [titleCN]="showMessageTitleCN"
+    [titleEN]="showMessageTitleEN"
+    [urlCN]="showMessageUrlCN"
+    [urlEN]="showMessageUrlEN"
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowMessage"
+    (onClose)="closeMessage()">
+</app-dashboard-message>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>
+
+<app-notification
+  #notification
+  [profile]="profile"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowNotification"
+  (onClose)="closeNotifications()">
+</app-notification>
+
+<app-battle-record
+  #battleRecord
+  [profile]="profile"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowBattleRecord"
+  (onClose)="closeBattleRecord()">
+</app-battle-record>
+
+<app-referral-program
+  #referralProgram
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowReferralProgram"
+  (onClose)="closeReferralProgram()">
+</app-referral-program>

@@ -1,0 +1,78 @@
+<div id="refPage" style="overflow-y: auto; overflow-x:hidden; position:absolute; padding: 20px; width:100%; height:100%; margin-bottom:0px;">
+  <span style="padding:20px;">{{['推荐奖励','Referral Bonus'][language]}}</span>
+  <div class="jumbotron text-center" style="margin:8px; padding:8px; margin-top: 20px;">
+    <h6 style="margin-top:8px;">{{['通过传播本游戏, 可获得','By inviting friends, you can get up to'][language]}}</h6>
+    <h6 style="margin-top:8px;">{{['10％的一级推荐，6.18%的二级推荐，和3.82%的三级推荐奖励！','10% Tier 1 referral bonus, 6.18% Tier 2 referral bonus, and 3.82% Tier 3 referral bonus!'][language]}}</h6>
+    <h6 style="margin-top:8px;">{{['新用户在“推荐码”处填入您的大名','New user can use your name as a referral code'][language]}}</h6>
+    <h5 class="sanguo">{{myName}}</h5>
+    <button class="btn btn-sm btn-primary" (click)="copyToClipboard()" *ngIf="!copied">{{['点击复制','Copy'][language]}}</button>
+    <h6 class="text-info" style="margin-top: 11px;" *ngIf="copied">{{['已复制','Copied'][language]}}</h6>
+    <h6 style="margin-top:8px;">{{['可随机获得免费装备一件','To get one free item
+'][language]}}</h6>
+  </div>
+  <div class="jumbotron text-center" style="margin:8px; padding:8px;">
+    <h6 class="text-secondary">{{['一级推荐奖金','Tier 1 Referral Bonus'][language]}}: <span class="text-success">{{tier1Bonus}} TRX</span></h6>
+    <h6 class="text-secondary">{{['二级推荐奖金','Tier 2 Referral Bonus'][language]}}: <span class="text-success">{{tier2Bonus}} TRX</span></h6>
+    <h6 class="text-secondary">{{['三级推荐奖金','Tier 3 Referral Bonus'][language]}}: <span class="text-success">{{tier3Bonus}} TRX</span></h6>
+    <h6 class="text-secondary">{{['总推荐奖金','Total Prize'][language]}}: <span class="gold">{{tier1Bonus + tier2Bonus + tier3Bonus}} TRX</span></h6>
+  </div>
+  <div class="col text-center">
+    <div class="btn-group btn-group-sm">
+      <button class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': level === 0}" (click)="goToLevel(0)">{{['一级推荐','Tier 1 Bonus'][language]}}</button>
+      <button class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': level === 1}" (click)="goToLevel(1)">{{['二级推荐','Tier 2 Bonus'][language]}}</button>
+      <button class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': level === 2}" (click)="goToLevel(2)">{{['三级推荐','Tier 3 Bonus'][language]}}</button>
+    </div>
+  </div>
+  <div class="card" style="margin: 8px 8px 0 8px; padding: 8px; overflow-wrap: initial;">
+    <div class="row sanguo" style="margin: 6px 0 0 0;">
+      <div class="col-4 col-md-2">
+        {{['昵称','User'][language]}}
+      </div>
+      <div class="col-4 col-md-2">
+        {{['消费','Spent'][language]}}
+      </div>
+      <div class="col-4 col-md-2">
+        {{['提成','Contribution'][language]}}
+      </div>
+      <div class="col-md-6 d-none d-xl-block">
+        {{['地址','Address'][language]}}
+      </div>
+    </div>
+    <ng-container *ngIf="teamByLevel[level].length>0">
+      <div class="row" style="margin: 6px 0 0 0;" *ngFor="let member of teamByLevel[level]">
+        <div class="col-4 col-md-2">
+          {{member?.name}}
+        </div>
+        <div class="col-4 col-md-2 gold">
+          {{member?.spent}} TRX
+        </div>
+        <div class="col-4 col-md-2 gold">
+          {{member?.contribution}} TRX
+        </div>
+        <div class="col-md-6 d-none d-xl-block">
+          {{member?.address}}
+        </div>
+      </div>
+    </ng-container>
+    <div class="row text-center" style="margin: 6px 0 0 0;" *ngIf="teamByLevel[level].length==0">
+      <div class="col-12">
+        {{['-- 空白 --','-- Blank --'][language]}}
+      </div>
+    </div>
+  </div>
+  <div class="row" style="padding:8px;">
+    <div class="col-auto" style="padding-right:0px;">
+      <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="goToFirst()" *ngIf="page>0"><span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span></button>
+      <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="goToPrev()" *ngIf="page>0"><span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span></button>
+    </div>
+    <div class="col-auto mx-auto" style="padding:0px;">
+      <div class="input-group input-group-sm">
+        <div class="form-group" style="margin-bottom:0px;">
+        </div>
+      </div>
+    </div>
+    <div class="col-auto" style="padding-left:0px;">
+      <button class="btn btn-sm btn-primary float-right" style="width:30px; height:30px; padding-top:1px;" (click)="goToNext()" *ngIf="teamByLevel[level].length>0"><span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span></button>
+    </div>
+  </div>
+</div>

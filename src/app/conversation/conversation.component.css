@@ -1,0 +1,55 @@
+.jh-conversation-main {
+  margin: 24px 24px 8px 24px;
+  padding: 8px;
+}
+
+.jh-conversation-hero {
+  padding: 8px;
+}
+
+.jh-conversation-hero img {
+  border-radius: 0.25rem;
+  width: 100%;
+}
+
+.jh-conversation-hero-name {
+  color: white;
+}
+
+.jh-conversation-answer {
+  margin: 8px 24px;
+  padding:4px;
+  border:none;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-conversation-answer:hover {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+}
+
+.jh-conversation-arrow-down {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.jh-conversation-arrow-down img {
+  width: 30px;
+}
+
+.jh-conversation {
+  animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s; /* Firefox */
+  -webkit-animation: fadein 0.5s; /* Safari and Chrome */
+  -o-animation: fadein 0.5s; /* Opera */
+}

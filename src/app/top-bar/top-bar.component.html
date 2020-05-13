@@ -1,0 +1,70 @@
+<nav class="navbar bg navbar-dark bg-primary" style="margin-top:-57px; padding:0px; position:fixed; transform:translateZ(0); -webkit-transform:translateZ(0); z-index:2; width:100%;">
+  <a class="navbar-brand d-none d-sm-flex" href="javascript:void(0)">
+    <img class="navbar-left" src="/assets/images/logo.png" style="height: 32px;">
+  </a>
+  <div class="navbar-collapse d-none d-sm-flex"
+      style="max-height:none;border-top: 1px solid rgba(0, 0, 0, 0.2); flex-basis: auto;">
+    <ul class="navbar-nav mr-auto" style="flex-direction: row;">
+      <ng-container>
+        <li class="nav-item" [ngClass]="{'active': tabId === 1}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(1)">{{['游戏剧情','Story'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 2}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(2)">{{['交易市场','Market'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 3}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(3)">{{['巅峰对决','Duel'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 4}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(4)">{{['每日夺宝','Daily Treasure'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 6}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(6)">{{['天梯排行','Ranking'][language]}}</a>
+        </li>
+      </ng-container>
+    </ul>
+    <ul class="navbar-nav" style="flex-direction: row;">
+      <li class="nav-item">
+        <a class="nav-link gold" style="cursor:pointer;">{{['白皮书','Whitepaper'][language]}}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link text-warning" href="javascript:void(0)" style="cursor:pointer;" (click)="changeLanguageByClick(1)" *ngIf="language==0">English</a>
+        <a class="nav-link text-warning" href="javascript:void(0)" style="cursor:pointer;" (click)="changeLanguageByClick(0)" *ngIf="language==1">中文</a>
+      </li>
+      <a class="nav-link" href="javascript:void(0)" style="padding:10px;" (click)="showWechatBox()">
+        <img class="navbar-left" src="/assets/images/wechat.png" style="max-height: 32px;">
+      </a>
+      <a class="nav-link" target="_blank" href="https://discord.gg/v5cqs52" style="padding:10px;"><img class="navbar-left" src="/assets/images/discord.png" style="max-height: 32px;"></a>
+    </ul>
+  </div>
+
+  <div class="navbar-collapse d-flex d-md-none" id="jh-mobile-menu"
+      style="max-height:none;border-top: 1px solid rgba(0, 0, 0, 0.2); display: flex; flex-basis: auto;">
+    <ul class="navbar-nav mr-auto jh-mobile-menu">
+      <ng-container>
+        <li class="nav-item" [ngClass]="{'active': tabId === 0}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(0)">{{['我军','Me'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 1}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(1)">{{['剧情','PvE'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 2}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(2)">{{['市场','Mkt'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 3}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(3)">{{['对决','PvP'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 4}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(4)">{{['夺宝','Div.'][language]}}</a>
+        </li>
+        <li class="nav-item" [ngClass]="{'active': tabId === 6}">
+          <a class="nav-link" href="javascript:void(0)" (click)="gotoTab(6)">{{['天梯','Rank'][language]}}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-warning" href="javascript:void(0)" style="cursor:pointer;" (click)="changeLanguageByClick(1)" *ngIf="language==0">EN</a>
+          <a class="nav-link text-warning" href="javascript:void(0)" style="cursor:pointer;" (click)="changeLanguageByClick(0)" *ngIf="language==1">中</a>
+        </li>
+      </ng-container>
+    </ul>
+  </div>
+</nav>

@@ -1,0 +1,64 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+
+  <div class="jh-create-city">
+    <div class="card jh-create-city-outerbox" *ngIf="waiting">
+      <img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;">
+    </div>
+
+    <div class="card jh-create-city-outerbox" *ngIf="!waiting">
+      <h5 class="title" style="text-align: center; margin-top: 20px;">{{['创建城市','Create State'][language]}}</h5>
+
+      <div class="jh-create-city-option">
+        <div class="row">
+          <div class="col-6" *ngFor="let citySize of [50,100]; index as i">
+            <input type="radio"
+                name="radio-city-size"
+                id="city-{{i}}"
+                [(ngModel)]="selectedCitySize"
+                [value]="citySize"
+                style="margin: 5px;"
+                (change)="onChangeSize($event)"
+                required
+               />
+            <label style="margin:0" for="city-{{i}}">{{ citySize == 100 ? ['大城','Large State'][language] : ['小城','Small State'][language]}}
+            </label>
+          </div>
+        </div>        
+      </div>
+
+      <div class="jh-create-city-option">
+        <div class="row">
+          <div class="col">
+             <h6>{{['售价','Price'][language]}}:
+               <span class="gold" *ngIf="!totalPriceLoading">{{ totalPrice }} <i class="icon-iost"></i></span>
+               <i class="icon-spinner spinner" *ngIf="totalPriceLoading"></i>
+             </h6>
+          </div>
+        </div>
+      </div>
+
+      <div class="jh-create-city-option">
+        <div class="row">
+          <div class="col-4" *ngFor="let name of cityNamesData[selectedCitySize]; index as i">
+            <input type="radio"
+                name="radio-name"
+                id="radio-{{i}}"
+                [(ngModel)]="selectedNameIndex"
+                [value]="i"
+                style="margin: 5px;"
+                [disabled]="isNameTaken(selectedCitySize == 100, i)"
+                required
+               />
+            <label style="margin:0" for="radio-{{i}}">{{name[language]}}
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="jh-create-city-buttons">
+        <button class="btn btn-sm btn-light" style="margin: 5px;" [disabled]="totalPriceLoading" (click)="buyCity(selectedNameIndex, selectedCitySize)">{{['创建','Create'][language]}}</button>
+        <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+      </div>
+    </div>
+  </div>
+</div>

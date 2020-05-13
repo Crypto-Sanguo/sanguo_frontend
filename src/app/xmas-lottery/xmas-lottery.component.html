@@ -1,0 +1,71 @@
+<div style="height: 100%; width: 100%; z-index: 13; position: absolute;">
+  <div class="jh-xmas-lottery-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{['圣诞抽奖','Chrismas Lottery'][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" style="max-height: 500px; overflow-y: auto;" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;">
+      </div>
+
+      <div class="modal-body text-left" style="max-height: 500px; overflow-y: auto;" *ngIf="!waiting">
+
+        <h5>{{['圣诞奖票','XMas Lottery'][language]}}</h5>
+        <h6>{{['未中奖的退票将在24小时内完成','If you have refund, it will happen in 24 hours.'][language]}}</h6>
+
+        <!--
+<div style="margin:8px auto; padding:8px; display: inline-flex;" class="row">
+          <div class="col-auto">
+            <button class="btn btn-sm btn-primary" (click)="drawWithTicket()">{{['用抽奖票','Draw Once With Ticket'][language]}}</button><br>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-sm btn-primary" (click)="drawWithIOST()">{{['用500 IOST','Draw Once With 500 IOST'][language]}}</button><br>
+          </div>
+        </div>-->
+
+        <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;" *ngIf="!waitingForData">
+          <div style="position:absolute; right:36px; z-index: 1;">
+            <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="load()">
+              <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+            </button>
+          </div>
+
+          <div class="row" style="margin: 0 0 10px 0;">
+            <div class="col text-center">
+              <div class="btn-group btn-group-sm">
+                <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['抽奖结果','Results'][language]}}</div>
+                <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['抽奖队列','Queue'][language]}}</div>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!waitingForData && tabIndex === 0">
+            <ng-container *ngFor="let entry of results; index as i">
+              <h6>
+                {{[timeAsCN(entry[0]), timeAsEN(entry[0])][language]}},
+
+                <span class="text-info">{{entry[1]}}</span> {{['获得了','got'][language]}}
+                <span class="text-info" *ngIf="entry[2]==0">{{ itemName(entry[3])[language] }}</span>
+                <span class="text-info" *ngIf="entry[2]==1">{{ unitName(entry[3])[language] }}</span>
+                <span class="text-info" *ngIf="entry[2]==2">{{ ['退票','Refund'][language] }}</span>
+              </h6>
+            </ng-container>
+          </div>
+
+          <div *ngIf="!waitingForData && tabIndex === 1">
+            <ng-container *ngFor="let entry of queue; index as i">
+              <h6>
+                {{entry[0]}} × {{entry[1]}}
+                <span *ngIf="i==0">&lt;===</span>
+              </h6>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jh-xmas-lottery-background" (click)="close()"></div>
+</div>

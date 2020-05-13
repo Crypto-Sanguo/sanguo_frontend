@@ -1,0 +1,51 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+
+  <div class="jh-land-rent">
+    <div class="jh-land-rent-background">
+      <div class="card jh-land-rent-outerbox">
+        <h6 class="text-info">{{['租期','Term of lease'][language]}}</h6>
+        <div class="row" style="padding: 4px 10px;">
+          <div class="col-6">
+            <input type="radio"
+                name="radio-term"
+                id="term-0"
+                [(ngModel)]="duration"
+                [value]="15"
+                style="margin: 5px;"
+                required
+               />
+            <label style="margin:0" for="term-0">15 {{ ['天','Days'][language] }}
+            </label>
+          </div>
+
+          <div class="col-6">
+            <input type="radio"
+                name="radio-term"
+                id="term-1"
+                [(ngModel)]="duration"
+                [value]="30"
+                style="margin: 5px;"
+                required
+             />
+            <label style="margin:0" for="term-1">30 {{ ['天','Days'][language] }}
+            </label>
+          </div>
+        </div>
+
+        <h6 class="text-info">{{['总租金','Total rent'][language]}}</h6>
+        <div class="input-group" style="padding: 4px 10px;">
+          <input type="number" class="form-control form-control-sm" placeholder="{{['总租金','Total rent'][language]}}" [(ngModel)]="price" (click)="$event.target.select()">
+          <div class="input-group-append">
+            <span class="input-group-text form-control-sm" style="padding-left:4px; padding-right:4px;">IOST</span>
+          </div>
+        </div>
+
+        <div style="margin: 5px auto;">
+          <button class="btn btn-sm btn-light" style="margin: 5px" [disabled]="!price || !duration || duration < 3 || duration > 30" (click)="work()">{{['确定','Confirm'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

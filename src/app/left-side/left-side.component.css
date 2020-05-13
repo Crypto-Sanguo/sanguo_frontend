@@ -1,0 +1,59 @@
+.jh-tab-group {
+  position: fixed;
+  left: 0;
+  top: calc(50% - 80px);
+  z-index: 1;
+}
+
+.jh-tab {
+  border-right: 1px solid rgba(0, 0, 0, 0.6);
+  padding: 3px;
+  width: 48px;
+  cursor: pointer;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none; 
+  -webkit-user-drag: none;
+}
+
+.jh-tab img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-tab.active {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.jh-tab:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.jh-tab:hover img {
+  opacity: 0.8;
+  filter: alpha(opacity=80);
+}
+
+
+.jh-tab.first {
+  border-top: 1px solid black;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jh-tab.middle {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.jh-tab.last {
+  border-bottom: 1px solid black;
+}

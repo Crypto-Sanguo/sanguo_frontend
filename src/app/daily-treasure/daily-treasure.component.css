@@ -1,0 +1,53 @@
+.dailyTreasure {
+  margin: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  width: 100%;
+  padding: 20px 16px;
+  height: 100%;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  position: absolute;
+}
+
+.dailyTreasure-title {
+  padding-left: 15px;
+  margin-bottom: 8px;
+}
+
+#dailyTreasure {
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.daily-treasure-image {
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none; 
+  -webkit-user-drag: none;
+}
+
+.daily-treasure-overlay {
+  width:100%; 
+  height:100%; 
+  border:none; 
+  position:absolute; 
+  top:0px; 
+  left:0px; 
+  background-color:rgba(0, 0, 0, 0.5);
+}
+
+.daily-treasure-button {
+  position:absolute; 
+  top:67.5%; 
+  left:50%; 
+  transform: 
+  translate(-50%, -50%);
+}

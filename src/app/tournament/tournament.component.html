@@ -1,0 +1,135 @@
+<div class="text-center" style="margin:0px; width:100%; height:100%; margin-bottom:0px;" *ngIf="!inBattle">
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;">
+    <ng-container *ngIf="!waitingForPool">
+      <h5 style="margin-top:8px;" class="text-info" *ngIf="!gameOver">{{['当前奖池','Current Pot'][language]}} </h5>
+      <h5 style="margin-top:8px;" class="text-info" *ngIf="gameOver">{{['比赛已结束','Game is Over'][language]}} </h5>
+
+      <h6 class="text-left">
+        {{['奖池','Pot'][language]}}: {{ sgtTotal }} <span class="icon-sgt"></span><br/>
+        {{['分子 (我方获胜)','Numerator (times you won)'][language]}}: {{ countIWin }}<br/>
+        {{['分母 (总战斗数)','Denominator (all battles)'][language]}}: {{ countTotal }}<br/>
+        {{['预计获得','Est Earning'][language]}}: {{formatNumber(estimate)}} <i class="icon-sgt"></i><br/>
+        <ng-container *ngIf="tournamentStatus">
+          {{['最后赢家','Final Winner'][language]}}:
+          <ng-container *ngIf="tournamentStatus.winner"> {{tournamentStatus.winner}}</ng-container>
+          <ng-container *ngIf="!tournamentStatus.winner"> {{['待定','To be determined'][language]}}</ng-container>
+        </ng-container>
+      </h6>
+    </ng-container>
+    <ng-container *ngIf="waitingForPool">
+      <img src="/assets/images/loading.gif" style="margin: 40px auto; display: block; width: 80px;">
+    </ng-container>
+  </div>
+
+  <div style="margin:8px auto; padding:8px; display: inline-flex;" class="row" *ngIf="!waitingForBattle">
+    <ng-container *ngIf="!waitingForPool">
+      <div class="col" *ngIf="!amInQueue && myTimes < 3">
+        <button class="btn btn-sm btn-primary" (click)="join()" *ngIf="gameOver">{{['排队下一场','Queue for a New Game'][language]}}</button>
+        <button class="btn btn-sm btn-primary" (click)="join()" *ngIf="!gameOver">{{['排队参赛','Queue for the Current Game'][language]}}</button><br>
+        <span class="sanguo" *ngIf="myTimes == 0">100 <span class="icon-sgt"></span></span>
+        <span class="sanguo" *ngIf="myTimes == 1">150 <span class="icon-sgt"></span></span>
+        <span class="sanguo" *ngIf="myTimes == 2">200 <span class="icon-sgt"></span></span>
+      </div>
+      <div class="col" *ngIf="amInQueue">
+        <span>{{['已排队', 'Already in Queue'][language]}}</span>
+      </div>
+      <div style="width:100%; text-align:center; margin-top: 5px;" *ngIf="gameOver">
+        <h5>{{['离战斗开始还有: ', 'Battles starts in: '][language]}}
+        <ng-container *ngIf="hoursRemain">
+          {{ hoursRemain }} {{['小时','H'][language]}}
+        </ng-container>
+        {{ minutesRemain }} {{['分钟','M'][language]}}
+        </h5>
+      </div>
+    </ng-container>
+    <ng-container *ngIf="waitingForPool">
+      <img src="/assets/images/loading.gif" style="margin: 40px auto; display: block; width: 80px;">
+    </ng-container>
+  </div>
+
+  <div *ngIf="waitingForBattle || waitingForAnimation"><img src="/assets/images/loading.gif" style="margin: 40px auto; display: block; width: 80px;"></div>
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;" *ngIf="!waitingForAnimation">
+    <div style="position:absolute; right:36px; z-index: 1;">
+      <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="loadHistory()">
+        <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+
+    <div class="row" style="margin: 0 0 10px 0;">
+      <div class="col text-center">
+        <div class="btn-group btn-group-sm">
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['战斗记录','Records'][language]}}</div>
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['玩家序列','Queue'][language]}}</div>
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['累计获胜','Winning'][language]}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 0">
+      <ng-container *ngFor="let entry of history; index as i">
+        <h6>
+          {{[timeAsCN(entry[0]), timeAsEN(entry[0])][language]}},
+          <span class="text-info">{{entry[1]}}</span> {{['与','duel with'][language]}}
+          <span class="text-info">{{entry[3]}}</span> {{['对决, ', ', and '][language]}}
+          <span class="text-info">{{entry[5]}}</span> <span class="text-danger">{{[' 出局。', ' lost.'][language]}}</span>
+        </h6>
+        <button class="btn btn-sm btn-primary" (click)="viewBattle(entry, history.length - 1 - i)">{{['观战','View the Battle'][language]}}</button>
+      </ng-container>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 1">
+      <ng-container *ngFor="let entry of queue; index as i">
+        <h6>
+          {{entry[0]}}
+        </h6>
+      </ng-container>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 2">
+      <ng-container *ngFor="let entry of rewardArray; index as i">
+        <h6>
+          <span class="text-info">{{entry[0]}}</span>: <span class="text-success">{{entry[1]}}</span>
+        </h6>
+      </ng-container>
+    </div>
+
+    <div *ngIf="waitingForHistory"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+  </div>
+</div>
+
+<app-battle
+    #battle
+    *ngIf="inBattle"
+    [isDuel]=true
+    [profile]=fakeProfile
+    [battleField]=battleField
+    [battleRecord]=battleRecord
+    [unitLimit]=6
+    (onFinish)="finishBattle()">
+</app-battle>
+
+<app-team-selection
+    #teamSelection
+    *ngIf="showTeamSelection"
+    style="height: 100%; width: 100%; z-index: 1; position: fixed; top: 0; left: 0"
+    [stageIndex]=-1
+    [placeIndex]=6
+    [battleIndex]=-1
+    [profile]=profile
+    (onSelect)="onSelectTeam($event)"
+    (onClose)="onFinishTeam()"
+    (onSetTeams)="setTeams($event)">
+</app-team-selection>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: fixed; top: 0; left: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

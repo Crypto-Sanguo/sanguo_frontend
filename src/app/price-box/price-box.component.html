@@ -1,0 +1,28 @@
+<div style="height: 100%; width: 100%; z-index: 13; position: absolute;">
+  <div class="jh-price-box-content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5>{{['您可以承受多少价格波动?','How much fluctuation is acceptable?'][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <p *ngIf="language == 0">
+          接受一个更高的波动率，可以提高您的抢购成功率。
+          您批准的数量和真实价格之间的差额并不会被扣款。
+        </p>
+        <p *ngIf="language == 1">
+          To accept a higher rate of fluctuation, you are more likely to win the bid.
+          The difference between your maximum acceptable amount and the real price won't be charged.
+        </p>
+        <button class="btn btn-sm btn-light" (click)="choose(0)">0%</button>
+        <button class="btn btn-sm btn-light" (click)="choose(10)">10%</button>
+        <button class="btn btn-sm btn-light" (click)="choose(20)">20%</button>
+        <button class="btn btn-sm btn-light" (click)="choose(40)">40%</button>
+        <button class="btn btn-sm btn-light" (click)="choose(80)">80%</button>
+      </div>
+    </div>
+  </div>
+  <div class="jh-price-box-background" (click)="close()"></div>
+</div>

@@ -1,0 +1,31 @@
+.jh-land-sell {
+  width: calc(100% - 50px);
+  margin-left: 25px;
+  position: absolute;
+  height: 100%;
+  top:0;
+  left: 0;
+}
+
+.jh-land-sell-outerbox {
+  min-width: 260px;
+  padding: 10px;
+  margin: 0;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.jh-land-sell-background {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  margin-top: 100px;
+}
+
+.jh-land-sell-box {
+  margin: 10px 0;
+}

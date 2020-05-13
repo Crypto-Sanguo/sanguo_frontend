@@ -1,0 +1,39 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+
+  <div class="jh-player-fill-energy">
+    <div class="jh-player-fill-energy-background">
+      <div class="card jh-player-fill-energy-outerbox" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="width:100px;height:100px;margin:20px auto;">
+      </div>
+      <div class="card jh-player-fill-energy-outerbox" *ngIf="!waiting">
+        <h5 class="title" style="text-align: center; margin-top: 10px;">{{['选择英雄','Select your hero'][language]}}</h5>
+        <div class="jh-player-fill-energy-box">
+          <div class="row" style="text-align: center;">
+            <div class="col-6" *ngFor="let unit of profile.units; index as i">
+              <label><input type="checkbox" [checked]="unit.checked" (change)="toggle(i)" style="margin-right: 10px;"/>
+                {{[unitData[unit.unitId].nameCN,unitData[unit.unitId].nameEN][language]}}
+              </label>
+            </div>
+          </div>
+          <h6 class="gold text-center" style="margin: 0">{{formatNumber(totalCost)}} <i class="icon-iost"></i></h6>
+        </div>
+        <div style="margin: 5px auto;">
+          <button class="btn btn-sm btn-light" style="margin: 5px" (click)="fill()">{{['确定','Confirm'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 4; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

@@ -1,0 +1,41 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+  <div class="jh-tax-rate">
+    <div class="jh-tax-rate-background">
+      <div class="card jh-tax-rate-outerbox" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="width:100px;height:100px;margin:20px auto;">
+      </div>
+      <div class="card jh-tax-rate-outerbox" *ngIf="!waiting">
+        <div class="row">
+          <div class="col">
+            <h5>{{["每次调整税率后，7天内不可再调","Every time you change tax rate, it will be fixed for 7 days."][language]}}</h5>
+            <h5>{{["请输入一个0到50之间的数字","The valid range of tax rate is 0% - 50%"][language]}}</h5>
+          </div>
+        </div>
+
+        <div class="input-group" style="padding: 4px 10px;">
+          <input type="number" class="form-control form-control-sm" placeholder="{{['税率','Tax Rate'][language]}}" [(ngModel)]="taxRate" (click)="$event.target.select()">
+          <div class="input-group-append">
+            <span class="input-group-text form-control-sm" style="padding-left:4px; padding-right:4px;">%</span>
+          </div>
+        </div>
+
+        <div style="margin: 5px auto;">
+          <button class="btn btn-sm btn-light" style="margin: 5px" [disabled]="!taxRate || taxRate < 0 || taxRate > 50" (click)="changeTaxRate()">{{['确定','Confirm'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 4; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

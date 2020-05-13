@@ -1,0 +1,27 @@
+<div class="battle-container" #container>
+  <iframe width="100%" height="100%" [src]="randomUrl" #myFrame id="myFrame">
+  </iframe>
+</div>
+
+<div class="jh-battle-reward" (click)="next()" *ngIf="inReward">
+  <div class="jh-battle-reward-background"></div>
+
+  <div class="card jh-battle-reward-outerbox" *ngIf="!didWin">
+    <audio preload="auto" autoplay>
+    <source src="assets/music/battleMusic/lose.mp3" type="audio/mpeg">
+    </audio>
+    <img src="/assets/images/failure.png" style="margin: auto;">
+  </div>
+
+  <div class="card jh-battle-reward-outerbox" *ngIf="didWin">
+    <img src="/assets/images/victory.png" style="margin: auto;">
+    <div class="jh-battle-reward-innerbox card bg-primary">
+     <audio preload="auto" autoplay>
+     <source src="assets/music/battleMusic/win.mp3" type="audio/mpeg">
+     </audio>
+      <img [src]="imagePath">
+    </div>
+    <h5 class="text-center" *ngIf="step>0">{{['获得了 ','You got '][language]}}{{itemDropAmount}} <span class="text-info">{{[itemNameCN,itemNameEN][language]}}</span></h5>
+    <h5 class="text-center" *ngIf="step==0">{{['获得了','You got '][language]}}<span class="sanguo">{{amount}} <i class="icon-sgt"></i></span></h5>
+  </div>
+</div>

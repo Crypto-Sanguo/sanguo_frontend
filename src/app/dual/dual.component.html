@@ -1,0 +1,184 @@
+<div class="text-center" style="margin:0px; padding:20px; overflow-y: auto; overflow-x:hidden; position:absolute; width:100%; height:100%; margin-bottom:0px;" *ngIf="!inBattle">
+
+  <div class="row" style="margin: 0 0 12px 0;">
+    <div class="col text-left">
+      <span>{{['巅峰对决','Dual'][language]}}</span>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-sm btn-primary" (click)="showRule()">{{['游戏规则','Rules'][language]}}</button>
+    </div>
+  </div>
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;">
+    <div style="position:absolute; right:36px;">
+      <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="loadRecentRecords()"><span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span></button>
+    </div>
+    <h5 style="margin-top:8px;">{{['您的战斗记录（显示10条）','Your battle Record (show 10 records)'][language]}} </h5>
+    <div *ngIf="!waitingForHistory">
+      <ng-container *ngFor="let record of history">
+        <h6 *ngIf="record[1]">
+          {{[timeAsCN(record[3]), timeAsEN(record[3])][language]}}, {{['您进攻了','You attacked'][language]}} <a [href]="record[0]" class="text-muted mx-none" target="_blank">{{record[0]}}</a>
+          <ng-container *ngIf="record[2]">, <span class="text-success">{{['获胜','won'][language]}}</span>{{['并得到',' and snatched'][language]}} <span class="text-warning">{{record[4]}} <i class="icon-sgt"></i></span></ng-container>
+          <ng-container *ngIf="!record[2]">, {{['无功而返','and got nothing'][language]}}</ng-container>
+        </h6>
+        <h6 *ngIf="!record[1]">
+          {{[timeAsCN(record[3]),timeAsEN(record[3])][language]}}, {{['您被','You were attacked by '][language]}} <a [href]="record[0]" class="text-muted mx-none" target="_blank">{{record[0]}}</a>
+          <ng-container *ngIf="record[2]">{{['',', '][language]}}<span class="text-danger">
+            {{['击败','defeated'][language]}}</span>{{[', 损失',' and lost'][language]}} <span class="text-warning">{{record[4]}} <i class="icon-sgt"></i></span>
+          </ng-container>
+          <ng-container *ngIf="!record[2]"> {{['攻击, 防守成功',', and defended successfully'][language]}}</ng-container>
+        </h6>
+      </ng-container>
+    </div>
+    <div *ngIf="waitingForHistory"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+  </div>
+
+  <div style="margin:8px; padding:8px;">
+    <h5 style="margin: 0;min-height:22px;" *ngIf="!waitingForCanAttack">
+      <ng-container *ngIf="!profile.hasStarted">{{['请先配置您的防守阵容','Please set up your defense formation first'][language]}}</ng-container>
+      <ng-container *ngIf="profile.hasStarted && (canAttack || canAttackCount < canAttackPaid)">{{['请发起进攻!','Attack!'][language]}}</ng-container>
+      <ng-container *ngIf="profile.hasStarted && (!canAttack && canAttackCount >= canAttackPaid)">{{['距离下次进攻还有','From the next attack
+'][language]}} 
+        <span class="text-info">{{hoursRemain | number : '2.0-0'}}:{{minutesRemain | number : '2.0-0'}}:{{secondsRemain | number : '2.0-0'}}</span>
+
+        <button class="btn btn-sm btn-warning"
+            (click)="payForAttack()"
+            [disabled]="waitingForPay"
+            *ngIf="canAttackCount >= canAttackPaid && canAttackPaid < 2"
+            style="margin:4px 20px;">{{['付费参战','Pay to Attack'][language]}}
+          {{canAttackPaid ? 400 : 200}} <i class="icon-sgt"></i>
+          <i class="icon-spinner spinner" *ngIf="waitingForPay"></i>
+        </button><br>
+      </ng-container>
+    </h5>
+  </div>
+
+  <div *ngIf="waitingForBattle"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+
+  <div class="card bg-dark" style="margin:8px;" *ngIf="!waitingForBattle">
+    <ul class="list-group" style="margin:8px;">
+      <div *ngIf="waitingForData"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+      <div *ngIf="!waitingForData">
+        <li class="list-group-item text-left align-items-center" *ngFor="let peer of peerArray; index as i">
+          <div class="row">
+            <div class="col-md-3 col-sm-4 text-center" style="margin:auto;">
+              <h5 class="text-muted" style="margin-top:10px; margin-bottom:10px;">
+                <span class="sanguo">#{{page * 10 + i + 1}}</span>
+                <a class="text-muted" href="javascript:void(0)" target="_blank">
+                  {{peer.name}}
+                </a>
+              </h5>
+            </div>
+            <div class="col-md-5 col-sm-8 jh-battleSection-rivals">
+              <div class="row">
+               <div class="col-4 jh-battleSection-image" *ngFor="let unit of peer.units">
+                 <ng-container *ngIf="unit.unitId">
+                   <img [src]="unitData[unit.unitId].imagePath || '/assets/images/bg.png'">
+                   <div class="jh-battleSection-playerStats bg-dark" *ngIf="unit.level">
+                     <span>{{[unitData[unit.unitId].nameCN, unitData[unit.unitId].nameEN][language]}}</span>
+                     <ul>
+                       <li>{{unit.level}}{{['级','level'][language]}}</li>
+                     </ul>
+                   </div>
+                 </ng-container>
+                 <img src="/assets/images/bg.png" *ngIf="!unit.unitId">
+               </div>
+              </div>
+            </div>
+            <div class="col-md-4 col-sm-12" style="margin:auto;">
+              <div class="row" style="margin-top:10px; margin-bottom:10px;">
+                <div class="col-6 text-center" style="padding:0px; margin-top:6px;">
+                  <h6 class="text-warning">{{peer.balance || "0"}} <i class="icon-sgt"></i></h6>
+                </div>
+                <div class="col-6 text-center">
+                  <button class="btn btn-sm btn-warning" [disabled]="!canAttack && canAttackCount >= canAttackPaid" (click)="startBattle(peer.name, i)"
+                      *ngIf="(!peer.isSafe || (!peer.isVerySafe && (canAttackCount < canAttackPaid))) && !peer.isMe">{{['进攻','attack'][language]}}</button>
+                  <span *ngIf="peer.isMe" style="margin-top: 4px;display: block;">{{['我军','My team'][language]}}</span>
+                  <span *ngIf="!peer.isMe && peer.isSafe"
+                      style="margin-top: 4px;display: block;">{{ peer.isVerySafe ? ["绝对安全","Very Safe"][language] : ["安全","Safe"][language]}}
+                    {{timeAsString(peer.timeSafe)}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </div>
+
+      <div class="row" style="margin-top:8px;">
+        <div class="col-auto" style="padding-right:0px;">
+          <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(0)" *ngIf="page>0">
+            <span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span>
+          </button>
+          <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(page - 1)" *ngIf="page>0">
+            <span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span>
+          </button>
+        </div>
+        <div class="col-auto mx-auto" style="padding:0px;">
+          <div class="input-group input-group-sm">
+            <select class="btn btn-sm btn-primary" style="height: 30px;" (change)="onSortBy($event.target)">
+              <option value="smart">{{['算法匹配','Algorithm Match'][language]}}</option>
+              <option value="score">{{['战力排名','Battle Ranking'][language]}}</option>
+              <option value="balance">{{['资产排名','Assets Ranking'][language]}}</option>
+            </select>
+            <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="loadPage(page)">
+              <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+            </button>
+          </div>
+        </div>
+        <div class="col-auto" style="padding-left:0px;">
+          <button class="btn btn-sm btn-primary float-right" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(page+1)" *ngIf="hasNext">
+            <span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span>
+          </button>
+        </div>
+      </div>
+    </ul>
+  </div>
+</div>
+
+<app-battle
+    #battle
+    *ngIf="inBattle"
+    [isDuel]=true
+    [profile]=profile
+    [battleField]=battleField
+    [battleRecord]=battleRecord
+    (onFinish)="finishBattle()">
+</app-battle>
+
+<app-team-selection
+    #teamSelection
+    *ngIf="showTeamSelection"
+    [stageIndex]=-1
+    [placeIndex]=-1
+    [battleIndex]=-1
+    [profile]=profile
+    (onSelect)="onSelectTeam($event)"
+    (onClose)="onFinishTeam()"
+    (onSetTeams)="setTeams()">
+</app-team-selection>
+
+<app-dual-rules
+    #dualRules
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowRules"
+    (onClose)="onClose()">
+</app-dual-rules>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>
+
+<app-login-box
+  #loginBox
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowLoginBox"
+  [profile]="profile"
+  (onClose)="closeLoginBox()">
+</app-login-box>

@@ -1,0 +1,42 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div style="height: 100%; width: 100%; z-index: 2; opacity: 0.7; background-color: black;"></div>
+  <div class="jh-player-recycle">
+    <div class="jh-player-recycle-background">
+      <div class="card jh-player-recycle-outerbox" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="width:100px;height:100px;margin:20px auto;">
+      </div>
+      <div class="card jh-player-recycle-outerbox" *ngIf="!waiting">
+        <h5 class="title" style="text-align: center; margin-top: 10px;">{{['选择装备','Choose Items'][language]}}</h5>
+        <div class="jh-player-recycle-box" style="max-height: 380px; overflow-y: auto;">
+          <div class="row text-center" style="margin: 0;">
+            <ng-container *ngFor="let item of profile.items; index as i">
+              <div class="col-6">
+                <label>
+                  <input type="checkbox" [checked]="item.checked" (change)="toggle(i)" style="margin-right: 10px;"/>
+                    {{[itemData[item.itemId].nameCN,itemData[item.itemId].nameEN][language]}}
+                </label>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+        <h6 class="text-warning text-center">{{totalWorth}} <i class="icon-sgt"></i></h6>
+        <div style="margin: 5px auto;">
+          <button class="btn btn-sm btn-light" style="margin: 5px" (click)="recycleInBatch()">{{['确定','Confirm'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="close()">{{['返回','Back'][language]}}</button>
+          <button class="btn btn-sm btn-primary" style="margin: 5px" (click)="selectAll()">{{['全选','All'][language]}}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 4; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

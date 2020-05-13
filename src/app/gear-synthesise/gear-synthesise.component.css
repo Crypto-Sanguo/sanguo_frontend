@@ -1,0 +1,76 @@
+.jh-gear-synthesise {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  position: absolute;
+  overflow: auto;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.jh-gear-synthesise-one {
+  padding: 0 8px 16px 8px;
+}
+
+.jh-gear-synthesise-one .col-6 {
+  padding: 2px 6px;
+}
+
+.jh-gear-synthesise-one img.jh-gear-synthesise-image {
+  border-radius: 0.25rem;
+  width: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none; 
+  -webkit-user-drag: none;
+}
+
+.jh-gear-synthesise-info {
+  margin: auto 0;
+  text-align: center;
+}
+
+.jh-gear-synthesise-one .jh-gear-synthesise-stats {
+  white-space: pre;
+}
+
+.jh-gear-synthesise-img {
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+  width: 100%;
+}
+
+.jh-gear-synthesise-innerbox {
+  margin: 10px 4px 4px 4px;
+  padding: 10px;
+  border: 0;
+}
+
+.jh-gear-synthesise-innerbox .row {
+  margin: 0 -4px;
+}
+
+.jh-gear-synthesise-innerbox .col-4 {
+  padding: 6px;
+}
+
+.jh-gear-synthesise-innerbox img {
+  width: 100%;
+}
+
+.jh-gear-synthesise-button {
+  margin-top: 10px;
+}

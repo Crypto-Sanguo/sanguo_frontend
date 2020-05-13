@@ -1,0 +1,63 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-gear-info-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{[nameCN,nameEN][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <p *ngIf="item.isMountable">
+          <ng-container *ngIf="item.hp > 0">
+            {{['血量', 'HP'][language]}}: +{{item.hp}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.attack > 0">
+            {{['攻击', 'Attack'][language]}}: +{{item.attack}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.intelligence > 0">
+            {{['智力', 'Intelligence'][language]}}: +{{item.intelligence}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.defense > 0">
+            {{['防御', 'Defense'][language]}}: +{{item.defense}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.agility > 0">
+            {{['敏捷', 'Agility'][language]}}: +{{item.agility}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.luck > 0">
+            {{['运气', 'Luck'][language]}}: +{{item.luck}}<br>
+          </ng-container>
+
+          <ng-container *ngIf="item.unitIdS && item.unitIdS.length">
+            {{['专属英雄', 'Special Heroes'][language]}}:
+            <span style="margin: 0 5px;" *ngFor="let unitId of item.unitIdS">{{getUnitName(unitId)[language]}}</span><br>
+          </ng-container>
+
+          <ng-container *ngIf="item.hpS > 0">
+            {{['专属血量', 'Special HP'][language]}}: +{{item.hpS}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.attackS > 0">
+            {{['专属攻击', 'Special Attack'][language]}}: +{{item.attackS}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.intelligenceS > 0">
+            {{['专属智力', 'Special Intelligence'][language]}}: +{{item.intelligenceS}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.defenseS > 0">
+            {{['专属防御', 'Special Defense'][language]}}: +{{item.defenseS}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.agilityS > 0">
+            {{['专属敏捷', 'Special Agility'][language]}}: +{{item.agilityS}}<br>
+          </ng-container>
+          <ng-container *ngIf="item.luckS > 0">
+            {{['专属运气', 'Special Luck'][language]}}: +{{item.luckS}}<br>
+          </ng-container>
+
+          <ng-container *ngIf="item.worth > 0">
+            {{['销毁可得', 'Recyle Worth'][language]}}: {{item.worth}} <i class="icon-sgt"></i>
+          </ng-container>
+        <p *ngIf="!item.isMountable">{{['基础材料 ','Basic Material'][language]}}</p>
+      </div>
+    </div>
+  </div>
+  <div class="jh-gear-info-background" (click)="close()"></div>
+</div>

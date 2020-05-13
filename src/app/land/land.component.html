@@ -1,0 +1,226 @@
+<div class="jh-land" *ngIf="!inCity && !inBattle && !waitingForBattle">
+  <div class="row" style="margin: 0">
+    <div class="col text-left">
+      <button class="btn btn-sm btn-light" *ngIf="tabIndex===0" (click)="create()">{{['创建城池','New State'][language]}}</button>
+    </div>
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['城池','State'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['流民','Nolander'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['租赁','Rental'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 3}" (click)="showTab(3)">{{['交易','Trade'][language]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;">
+    <h6 class="text-center" style="margin-top:8px;">{{['土地, 可以存储财富，并让驻防的英雄获得40%的铜币加成','Land holds your assets, and provides 40% extra token drops for heroes deployed on it.'][language]}}</h6>
+  </div>
+
+  <div class="row" style="margin:10px 0;" *ngIf="!waiting">
+
+    <ng-container *ngIf="tabIndex===0">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let city of allCities">
+        <div class="card row jh-land-one">
+          <div class="col-6 jh-land-one-img">
+            <img src="/assets/images/places/xuzhou.png" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-land-name text-left">{{ cityIdToCityName(city.cityId)[language] }}</h4>
+            <p>
+              {{['主公','King'][language]}}:
+              <span *ngIf="!city.loading">{{city.owner}}</span><i class="icon-spinner spinner" *ngIf="city.loading"></i><br/>
+              {{['田地','Land'][language]}}:
+              <span *ngIf="!city.loading">{{city.landIdArray.length}}</span><i class="icon-spinner spinner" *ngIf="city.loading"></i><br/>
+              {{['税率','Tax Rate'][language]}}:
+              <span *ngIf="!city.loading">{{city.taxRate || 0}}%</span><i class="icon-spinner spinner" *ngIf="city.loading"></i><br/>
+              {{['悬赏','Bounty'][language]}}:
+              <span *ngIf="!city.loading">{{city.accumulated || 0}}<i class="icon-sgt"></i></span><i class="icon-spinner spinner" *ngIf="city.loading"></i><br/>
+              {{['状态','Status'][language]}}:
+              <span *ngIf="!city.loading">{{isDefeated(city.defeat || 0) ? ['破城','Defeated'][language] : ['安全','Safe'][language] }}</span><i class="icon-spinner spinner" *ngIf="city.loading"></i><br/>
+            </p>
+          </div>
+          <div class="col-12 text-center" style="padding: 8px;">
+            <button class="jh-land-btn btn btn-sm btn-light"
+                [disabled]="city.loading"
+                (click)="enterCity(city.cityId, city.owner)">{{['查看','View'][language]}}</button>
+            <button class="jh-land-btn btn btn-sm btn-light"
+                [disabled]="city.loading || city.scoreLoading"
+                (click)="showScore(city)">
+              {{['积分','Score'][language]}}
+              <i class="icon-spinner spinner" *ngIf="city.scoreLoading"></i>
+            </button>
+            <button class="jh-land-btn btn btn-sm btn-warning"
+                *ngIf="!city.loading && !isMe(city.owner) && !isDefeated(city.defeat || 0)"
+                (click)="attackCity(city.cityId)">{{['攻城','Attack'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="col" *ngIf="tabIndex===1">
+      <li class="list-group-item text-left align-items-center" *ngFor="let peer of allPeers; index as i">
+        <div class="row">
+          <div class="col-md-3 col-sm-4 text-center" style="margin:auto;">
+            <h5 class="text-muted" style="margin-top:10px; margin-bottom:10px;">
+              <span class="sanguo">#{{(currentPage - 1) * 20 + i + 1}}</span>
+              <span class="text-muted"> {{peer.name}}</span>
+            </h5>
+          </div>
+          <div class="col-md-5 col-sm-8 jh-land-peer-rivals">
+            <div class="row">
+             <div class="col-4 jh-land-peer-image" *ngFor="let unit of peer.units">
+               <ng-container *ngIf="unit.unitId">
+                 <img [src]="getUnitImagePath(unit.unitId)">
+                 <div class="jh-land-peer-playerStats bg-dark" *ngIf="unit.level">
+                   <span>{{ getUnitName(unit.unitId)[language] }}</span>
+                   <ul>
+                     <li>{{unit.level}}{{['级','level'][language]}}</li>
+                   </ul>
+                 </div>
+               </ng-container>
+               <img src="/assets/images/bg.png" *ngIf="!unit.unitId">
+             </div>
+            </div>
+          </div>
+          <div class="col-md-4 col-sm-12" style="margin:auto;">
+            <div class="row" style="margin-top:10px; margin-bottom:10px;">
+              <div class="col-6 text-center" style="padding:0px; margin-top:6px;">
+                <h6 class="text-warning">{{peer.balance || "0"}} <i class="icon-sgt"></i></h6>
+              </div>
+              <div class="col-6 text-center">
+                <ng-container *ngIf="!isMe(peer.name) && !peer.isVerySafe">
+                  <button class="btn btn-sm btn-warning" (click)="attackPeer(peer.name, false)"
+                      *ngIf="!peer.isSafe">{{['进攻','attack'][language]}}</button>
+                  <button class="btn btn-sm btn-warning" (click)="attackPeer(peer.name, true)"
+                      *ngIf="peer.isSafe">{{['进攻','attack'][language]}} 200 <i class="icon-sgt"></i></button>
+                </ng-container>
+                <span *ngIf="peer.isMe" style="margin-top: 4px;display: block;">{{['我军','My team'][language]}}</span>
+                <span *ngIf="peer.isVerySafe" style="margin-top: 4px;display: block;">{{ ["安全","Safe"][language]}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
+
+    <ng-container *ngIf="tabIndex===2">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let offer of allOffers">
+        <div class="card row jh-land-one">
+          <div class="col-12 text-center">
+            <h5 class="text-muted" style="margin-top:10px; margin-bottom:10px;">
+              <span class="text-muted">{{['田地','Land'][language]}} #{{offer.landId}} </span>
+            </h5>
+            <p>
+              {{['地主','Owner'][language]}}: {{offer.seller}}<br/>
+              {{['城池','State'][language]}}: {{offer.cityId ? cityIdToCityName(offer.cityId)[language] : ''}}<br/>
+              {{['租期','Term'][language]}}: {{offer.duration}}{{['天',' Days'][language]}}<br/>
+              {{['租金','Rent'][language]}}: {{offer.price}}
+            </p>
+          </div>
+          <div class="col-12 text-center" *ngIf="!isMe(offer.seller)">
+            <button class="btn btn-sm btn-warning" style="margin: 0 3px;" (click)="rentLand(offer.landId, offer.price)">{{['租用','Take it'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="tabIndex===3">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let offer of allOffers">
+        <div class="card row jh-land-one">
+          <div class="col-12 text-center">
+            <h5 class="text-muted" style="margin-top:10px; margin-bottom:10px;">
+              <span class="text-muted">{{['田地','Land'][language]}} #{{offer.landId}} </span>
+            </h5>
+            <p>
+              {{['地主','Owner'][language]}}: {{offer.seller}}<br/>
+              {{['城池','State'][language]}}: {{offer.cityId ? cityIdToCityName(offer.cityId)[language] : ''}}<br/>
+              {{['售价','Price'][language]}}: {{offer.price}}
+            </p>
+          </div>
+          <div class="col-12 text-center" *ngIf="!isMe(offer.seller)">
+            <button class="btn btn-sm btn-warning" style="margin: 0 3px;" (click)="buyLand(offer.landId, offer.price)">{{['购买','Buy'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="row" style="margin:10px;" *ngIf="!waiting">
+    <div class="col-auto" style="padding-right:0px; padding-left: 4px; min-width: 64px;">
+      <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(1)" *ngIf="currentPage > 1">
+        <span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+      <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(currentPage - 1)" *ngIf="currentPage > 1">
+        <span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+    <div class="col-auto jh-market-img mx-auto" style="padding:0px;">
+      <button class="btn btn-sm btn-primary float-center" (click)="refresh()">
+        <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+    <div class="col-auto" style="padding-left:0px; padding-right: 4px; min-width: 27px;">
+      <button class="btn btn-sm btn-primary float-right" (click)="gotoPage(currentPage + 1)" *ngIf="hasMore">
+        <span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+</div>
+
+<div class="jh-land" *ngIf="waitingForBattle">
+  <div><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+</div>
+
+<app-land-land
+    #landLand
+    *ngIf="inCity"
+    [profile]=profile
+    [cityId]=selectedCityId
+    [cityOwner]=selectedCityOwner
+    (onGoBack)="exitCity()"
+    (onSetTeams)="setTeams($event)">
+</app-land-land>
+
+<app-create-city
+    #createCity
+    *ngIf="willShowCreateCity"
+    (onClose)="onClose()"
+    (onCloseAndRefresh)="onCloseAndRefresh()">
+</app-create-city>
+
+<app-team-selection
+    #teamSelection
+    *ngIf="showTeamSelection"
+    [stageIndex]=-1
+    [placeIndex]=-1
+    [battleIndex]=-1
+    [profile]=profile
+    (onSelect)="onSelectTeam($event)"
+    (onClose)="onFinishTeam()"
+    (onSetTeams)="setTeams($event)">
+</app-team-selection>
+
+<app-battle
+    #battle
+    *ngIf="inBattle"
+    [isDuel]=true
+    [profile]=profile
+    [battleField]=battleField
+    [battleRecord]=battleRecord
+    [unitLimit]=3
+    (onFinish)="finishBattle($event)">
+</app-battle>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

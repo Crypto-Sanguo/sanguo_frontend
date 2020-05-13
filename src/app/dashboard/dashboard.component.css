@@ -1,0 +1,86 @@
+.dashboard {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.dashboard-advertisement {
+  width:100%; 
+  position:relative; 
+  margin-top: 14px;
+}
+
+.dashboard-advertisement img { 
+  width: 100%; 
+  height: auto;
+  cursor: pointer;
+  border-radius: 0.25rem !important;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.dashboard-myteam {
+  border:none;
+}
+
+.dashboard-myteam-list {
+  margin: 5px 4px;
+  padding: 5px;
+}
+
+.dashboard-myteam-list .col-4 {
+  padding: 0 4px;
+  text-align: center;
+}
+
+.dashboard-myteam-list img {
+  width: 100%;
+}
+
+.dashboard-myteam-title {
+  text-align: left;
+  margin-left: 12px;
+}
+
+.dashboard-myteam-profile {
+  text-align: center;
+  padding: 10px;
+}
+
+.dashboard-trade-list {
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+}
+
+.dashboard-recent-news {
+  border:none;
+  padding: 10px 20px;
+  background-color: inherit;
+}
+
+.dashboard-recent-news .jh-dashboard-time {
+  color: #666;
+}
+
+.dashboard-partners {
+  text-align: center;
+}
+
+.dashboard-partners img {
+  display: inline-block;
+  width: 150px;
+  margin: 15px;
+}

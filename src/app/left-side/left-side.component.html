@@ -1,0 +1,17 @@
+<div class="jh-tab-group">
+  <div class="jh-tab first" [ngClass]="{'active': showIndex === 0}" (click)="show(0)">
+    <img src="/assets/images/profile.png" width="40px" height="40px">
+  </div>
+  <div class="jh-tab middle" [ngClass]="{'active': showIndex === 1}" (click)="show(1)">
+    <img src="/assets/images/item.png" width="40px" height="40px">
+  </div>
+  <div class="jh-tab last" [ngClass]="{'active': showIndex === 2}" (click)="show(2)">
+    <img src="/assets/images/team.png" width="40px" height="40px">
+  </div>
+</div>
+
+<div style="height: 100%; width: 100%; z-index: 0; position: absolute;">
+  <app-player-profile #profile *ngIf="showIndex == 0" (onTopBarGotoTab)="topBarGotoTab($event)" (onRefreshBottomBar)="refreshBottomBar($event)"></app-player-profile>
+  <app-player-gear #gear *ngIf="showIndex == 1"></app-player-gear>
+  <app-player-team #team *ngIf="showIndex == 2"></app-player-team>
+</div>

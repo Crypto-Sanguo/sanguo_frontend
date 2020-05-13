@@ -1,0 +1,28 @@
+<div style="height: 100%; width: 100%; z-index: 13; position: absolute;">
+  <div class="jh-login-box-content">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 *ngIf="!profile.hasStarted">{{['您还没有创建过账户','You don\'t have an account yet.'][language]}}</h5>
+        <h5 *ngIf="profile.hasStarted">{{['预售尚未开始','Presale hasn\'t started yet'][language]}}</h5>
+      </div>
+      <div class="modal-body text-center" *ngIf="profile.walletReady && !waiting">
+        <div class="input-group mb-3" style="margin: 0 20px">
+          <input type="text" class="form-control form-control-sm" [placeholder]="['推荐码(选填)','Referral code (optional)'][language]" [(ngModel)]="referredBy" value="{{referredBy}}">
+        </div>
+        <button class="btn btn-sm btn-light" (click)="startGame()" *ngIf="!profile.hasStarted">
+          {{['创建账户','Create My Account'][language]}}
+        </button>
+        <ng-container *ngIf="profile.hasStarted">
+          {{['请耐心等待','Please be patient'][language]}}
+        </ng-container>
+      </div>
+      <div class="modal-body text-center" *ngIf="!profile.walletReady && !waiting">
+        {{['请登录您的iWallet或Token Pocket钱包','Please login to your iWallet or Token Pocket wallet'][language]}}
+      </div>
+      <div class="modal-body text-center" *ngIf="waiting">
+        <img src="/assets/images/loading.gif" style="margin: 10px auto; display: block; width: 80px;">
+      </div>
+    </div>
+  </div>
+  <div class="jh-login-box-background"></div>
+</div>

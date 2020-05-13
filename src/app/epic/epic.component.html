@@ -1,0 +1,124 @@
+<div class="text-center" style="margin:0px; width:100%; height:100%; margin-bottom:0px;" *ngIf="!inBattle">
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;">
+    <div style="position:absolute; right:36px;">
+      <button class="btn btn-primary float-center"
+          style="height:30px; padding-top:1px;"
+          (click)="showInformation()"
+          *ngIf="!informationLoading"><span class="icon-evil" style="font-size:10px; margin-top:0px;"></span></button>
+      <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;"
+          *ngIf="informationLoading"> <i class="icon-spinner spinner"></i> </button>
+    </div>
+
+    <h5 style="margin-top:8px;" class="text-info">{{['规则介绍','Rules'][language]}} </h5>
+    <h6 class="text-left">
+      {{['在战斗中，您将排队遭遇吕布和2个随机的敌人。吕布的血条是正常值的100倍。全服所有玩家共同努力，直到战胜吕布为止。',
+         'In this battle, you join the queue to battle with Lv Bu and two other random heroes. Lv Bu\'s HP is 100 times of the normal mode. All players need to collaborate to defeat Lv Bu.'][language]}}
+    </h6>
+    <h6 class="text-left">
+      {{['战斗胜利后，所有参战的玩家将根据战斗中的贡献值平分材料的掉落。对吕布完成致命一击的玩家，会有额外奖励。',
+         'After winning, every participate will get his share of dropped items according to his contribution. And the player that give Lv Bu the final attack will get a special award.'][language]}}
+    </h6>
+    <h6 class="text-left">
+      {{['战斗如果提前结束，您多花费的三国币将在1个工作日内退款。','If the battle finishes without using your SGT, you will be refunded in 24 hours.'][language]}}
+    </h6>
+  </div>
+
+  <div style="margin:8px auto; padding:8px; display: inline-flex;" class="row" *ngIf="!waitingForBattle && !bossDead">
+    <div class="col-auto">
+      <button class="btn btn-sm btn-primary" (click)="battle(1)">{{['参战1次','Battle × 1'][language]}}</button><br>
+      <span class="sanguo">30 <span class="icon-sgt"></span></span>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-sm btn-primary" (click)="battle(3)">{{['参战3次','Battle × 3'][language]}}</button><br>
+      <span class="sanguo">90 <span class="icon-sgt"></span></span>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-sm btn-primary" (click)="battle(5)">{{['参战5次','Battle × 5'][language]}}</button><br>
+      <span class="sanguo">150 <span class="icon-sgt"></span></span>
+    </div>
+  </div>
+
+  <div style="margin:8px auto; padding:8px; display: inline-flex;" *ngIf="!waitingForBattle && bossDead">
+    <div style="width:100%; text-align:center;"><h5>{{['Boss已死，请等待下次活动', 'Boss is already killed. Please wait for the next event.'][language]}}</h5></div>
+    <div style="width:100%; text-align:center; padding: inherit;">
+      <button class="btn btn-sm" (click)="showAward()" *ngIf="!awardLoading">{{['查看奖励','Check Rewards'][language]}}</button>
+      <button class="btn btn-sm" *ngIf="awardLoading"> <i class="icon-spinner spinner"></i> </button>
+    </div>
+  </div>
+
+  <div *ngIf="waitingForBattle || waitingForAnimation"><img src="/assets/images/loading.gif" style="margin: 40px auto; display: block; width: 80px;"></div>
+
+  <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px;" *ngIf="!waitingForAnimation">
+    <div style="position:absolute; right:36px; z-index: 1;">
+      <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="loadHistory()">
+        <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+
+    <div class="row" style="margin: 0 0 10px 0;">
+      <div class="col text-center">
+        <div class="btn-group btn-group-sm">
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['战斗记录','Records'][language]}}</div>
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['玩家序列','Queue'][language]}}</div>
+          <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['累计伤害','Damage'][language]}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 0">
+      <ng-container *ngFor="let entry of history; index as i">
+        <h6>
+          {{[timeAsCN(entry[0]), timeAsEN(entry[0])][language]}},
+          <span class="text-info">{{entry[1]}}</span> {{['造成了','made'][language]}}
+          <span class="text-danger">{{entry[2]}}</span>
+          {{['伤害','damage'][language]}}
+          <span class="text-success" *ngIf="bossDead && i == 0">
+            {{['成功击杀','killed boss'][language]}}
+          </span>
+        </h6>
+        <button class="btn btn-sm btn-primary" (click)="viewBattle(entry)">{{['观战','View the Battle'][language]}}</button>
+      </ng-container>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 1">
+      <ng-container *ngFor="let entry of queue; index as i">
+        <h6>
+          {{entry[0]}} × {{entry[1]}}
+          <span *ngIf="i==0">&lt;===</span>
+        </h6>
+      </ng-container>
+    </div>
+
+    <div *ngIf="!waitingForHistory && tabIndex === 2">
+      <ng-container *ngFor="let entry of damageArray; index as i">
+        <h6>
+          <span class="text-info">{{entry[0]}}</span> <span class="text-danger">{{entry[1]}}</span>
+        </h6>
+      </ng-container>
+    </div>
+
+    <div *ngIf="waitingForHistory"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+  </div>
+</div>
+
+<app-battle
+    #battle
+    *ngIf="inBattle"
+    [isDuel]=true
+    [profile]=fakeProfile
+    [battleField]=battleField
+    [battleRecord]=battleRecord
+    (onFinish)="finishBattle()">
+</app-battle>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 1; position: fixed; top: 0; left: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

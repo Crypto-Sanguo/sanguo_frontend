@@ -1,0 +1,142 @@
+.jh-land {
+  margin:0px;
+  overflow-y: auto;
+  overflow-x:hidden;
+  width: 100%;
+  padding: 15px 16px;
+  height: 100%;
+  margin-bottom:0px;
+  padding-bottom:0px;
+  position: absolute;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.jh-land-place-image img {
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-land-one {
+  margin: 4px;
+  padding: 8px;
+  flex-direction: row;
+}
+
+.jh-land-name {
+  color: #fd7e14;
+  margin: 0 0 5px 0;
+}
+
+.jh-land-one-img {
+  padding: 0;
+}
+
+.jh-land-one-img img{
+  width: 100%;
+  border-radius: 0.25rem;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-land-btn {
+  margin: 0 5px;
+}
+
+.jh-land-battle-image img{
+  border-radius: 0.25rem;
+  width: 100%;
+  height: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-land-battle-image {
+  padding: 0px 6px;
+  margin-bottom: 6px;
+}
+
+.jh-land-battle-image .jh-land-battle-stats {
+  visibility: hidden;
+  width: 120px;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  position: absolute;
+  z-index: 1;
+}
+
+.jh-land-battle-image:hover .jh-land-battle-stats {
+  visibility: visible;
+}
+
+.jh-land-battle-stats ul{
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+.jh-land-peer-rivals .jh-land-peer-image img{
+  border-radius: 0.25rem;
+  width: 100%;
+  height: 100%;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-land-peer-image {
+  padding: 0 5px;
+}
+
+.jh-land-peer-image .jh-land-peer-playerStats {
+  visibility: hidden;
+  width: 120px;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  top: 100%;
+  left: 50%;
+  margin-left: -60px;
+  position: absolute;
+  z-index: 1;
+}
+
+.jh-land-peer-image:hover .jh-land-peer-playerStats {
+  visibility: visible;
+}
+
+.jh-land-peer-image ul{
+  list-style-type: none;
+  padding-inline-start: 0;
+}

@@ -1,0 +1,105 @@
+<div class="jh-leaderboard">
+
+  <div class="row" style="margin: 0">
+    <div class="col">
+      {{['您的排名','Your ranking'][language]}}: {{myRank}}
+    </div>
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['战力','POW'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['战绩','BAT'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['资产','AST'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 3}" (click)="showTab(3)">{{['收入','REV'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 4}" (click)="showTab(4)">{{['消费','SPD'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 5}" (click)="showTab(5)">{{['利润','PFT'][language]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: 80px auto; display: block; width: 80px;"></div>
+
+  <ul class="list-group" style="margin:18px 8px;" *ngIf="!waiting">
+    <div>
+      <li class="list-group-item text-left align-items-center" *ngFor="let peer of peerArray; index as i">
+        <div class="row">
+          <div class="col-md-3 col-sm-4 text-center" style="margin:auto;">
+            <h5 class="text-muted" style="margin-top:10px; margin-bottom:10px;">
+              <span class="sanguo">#{{page * 20 + i + 1}}</span>
+              <a class="text-muted" href="javascript:void(0)" (click)="showUserLandInfo(peer.name)">
+                {{peer.name}}
+              </a>
+            </h5>
+          </div>
+          <div class="col-md-5 col-sm-8 jh-leaderboard-rivals">
+            <div class="row">
+             <div class="col-4 jh-leaderboard-image" *ngFor="let unit of peer.units">
+               <ng-container *ngIf="unit.unitId">
+                 <img [src]="unitData[unit.unitId].imagePath || '/assets/images/bg.png'">
+                 <div class="jh-leaderboard-playerStats bg-dark" *ngIf="unit.level">
+                   <span>{{[unitData[unit.unitId].nameCN, unitData[unit.unitId].nameEN][language]}}</span>
+                   <ul>
+                     <li>{{unit.level}}{{['级','level'][language]}}</li>
+                   </ul>
+                 </div>
+               </ng-container>
+               <img src="/assets/images/bg.png" *ngIf="!unit.unitId">
+             </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-12" style="margin:auto;">
+            <div class="row" style="margin-top:10px; margin-bottom:10px;">
+              <div class="col-4 text-center" style="padding:0px; margin-top:6px;">
+                <h6 class="text-warning">{{peer.balance ? formatNumber(peer.balance) : '0'}} <i class="icon-sgt"></i></h6>
+              </div>
+              <div class="col-4 text-center" style="padding:0px; margin-top:6px;">
+                <h6 class="text-info" *ngIf="tabIndex == 0">{{peer.value ? peer.value : '0'}} </h6>
+                <h6 class="gold" *ngIf="tabIndex == 3">{{peer.value ? formatNumber(peer.value) : '0'}} <i class="icon-iost"></i></h6>
+                <h6 class="text-info" *ngIf="tabIndex == 4">{{peer.value ? formatNumber(peer.value) : '0'}} <i class="icon-iost"></i></h6>
+                <h6 class="text-success" *ngIf="tabIndex == 5">{{peer.value ? formatNumber(peer.value) : '0'}} <i class="icon-iost"></i></h6>
+              </div>
+              <div class="col-4 text-center">
+                <span *ngIf="peer.isMe" style="margin-top: 4px;display: block;">{{['我军','My Team'][language]}}</span>
+                <span *ngIf="!peer.isMe && peer.isSafe" style="margin-top: 4px;display: block;">{{['休整','In Cooldown'][language]}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </div>
+
+    <div class="row" style="margin-top:8px;">
+      <div class="col-auto" style="padding-right:0px;">
+        <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(0)" *ngIf="page>0">
+          <span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span>
+        </button>
+        <button class="btn btn-sm btn-primary float-left" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(page - 1)" *ngIf="page>0">
+          <span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span>
+        </button>
+      </div>
+      <div class="col-auto mx-auto" style="padding:0px;">
+        <div class="input-group input-group-sm">
+          <button class="btn btn-primary float-center" style="height:30px; padding-top:1px;" (click)="loadPage(page)">
+            <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+          </button>
+        </div>
+      </div>
+      <div class="col-auto" style="padding-left:0px;">
+        <button class="btn btn-sm btn-primary float-right" style="width:30px; height:30px; padding-top:1px;" (click)="loadPage(page+1)" *ngIf="hasNext">
+          <span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span>
+        </button>
+      </div>
+    </div>
+  </ul>
+</div>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

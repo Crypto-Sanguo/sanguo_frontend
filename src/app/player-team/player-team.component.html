@@ -1,0 +1,55 @@
+<div class = "jh-player-team">
+  <div class="row" style="margin:12px 20px;padding:4px;">
+    <div class="col-auto text-left">
+      <button class="btn btn-sm btn-primary" (click)="goBack()">{{['返回','Back'][language]}}</button>
+    </div>
+    <div class="col"></div>
+    <div class="col-auto text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['三人','Size 3'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['六人','Size 6'][language]}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="jh-player-team-container">
+    <div class="card" *ngFor="let team of teamArray; index as i">
+      <div class="row">
+        <div class="col-xl-3 d-none d-xl-block">
+          <h5 *ngIf="i == 0">{{['队列一','Team One'][language]}}</h5>
+          <h5 *ngIf="i == 1">{{['队列二','Team Two'][language]}}</h5>
+          <h5 *ngIf="i == 2">{{['队列三','Team Three'][language]}}</h5>
+          <h5 *ngIf="i == 3">{{['队列四','Team Four'][language]}}</h5>
+          <h5 *ngIf="i == 4">{{['队列五','Team Five'][language]}}</h5>
+          <h5 *ngIf="i == 5">{{['队列六','Team Six'][language]}}</h5>
+          <h5 *ngIf="i == 6">{{['队列七','Team Seven'][language]}}</h5>
+          <h5 *ngIf="i == 7">{{['队列八','Team Eight'][language]}}</h5>
+          <h5 *ngIf="i == 8">{{['队列九','Team Nine'][language]}}</h5>
+        </div>
+        <div class="col-xl-9 col-12">
+          <div class="row">
+            <div class="col-4" *ngFor="let item of team; index as j">
+              <img [src]="item.src" *ngIf="item">
+              <img src="/assets/images/bg.png" *ngIf="!item">
+              <div class="row jh-player-team-buttons" *ngIf="item">
+                <button class="btn btn-sm btn-light change" (click)="changeUnit(i, j)">{{['更改','Change'][language]}}</button>
+                <button class="btn btn-sm btn-light remove" (click)="removeUnit(i, j)">{{['移除','Remove'][language]}}</button>
+              </div>
+              <div class="row jh-player-team-buttons" *ngIf="!item">
+                <button class="btn btn-sm btn-light change" (click)="addUnit(i, j)">{{['添加','Add'][language]}}</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-player-gear-selection
+    #playerGearSelection
+    style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+    *ngIf="willShowSelection"
+    [profile]=profile
+    (onSelect)="onSelect($event)"
+    (onClose)="onClose()">
+</app-player-gear-selection>

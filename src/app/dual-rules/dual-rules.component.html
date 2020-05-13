@@ -1,0 +1,18 @@
+<div style="height: 100%; width: 100%; z-index: 3; position: absolute;">
+  <div class="jh-dual-rules-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{['游戏规则','Rules'][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left">
+        <p>这是一个PvP对战的游戏。玩家可设置自己的防守阵容，与全球的玩家自由交战。每一次成功的交战，玩家可以完成一次对其他玩家的掠夺，获得对方所持 <i class="icon-sgt sanguo"></i> 的5%.</p>
+        <p>每12小时，玩家可以掠夺其他玩家一次；每被敌人掠夺一次，玩家可以保持24小时的安全期。</p>
+        <p>快来参与对战吧！我们将不定期推出排名赛，对排行榜上靠前的玩家进行奖励。在这里，你将制霸三国，书写你的传奇。</p>
+      </div>
+    </div>
+  </div>
+  <div class="jh-dual-rules-background" (click)="close()"></div>
+</div>

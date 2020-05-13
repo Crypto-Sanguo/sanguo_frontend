@@ -1,0 +1,75 @@
+<div class="jh-place" *ngIf="!inConversation">
+
+  <div class="row" style="margin: 0">
+    <div class="col">
+      <button class="btn btn-sm btn-primary" (click)="goBack()" *ngIf="showGoBack">{{['返回','Back'][language]}}</button>
+    </div>
+    <div class="col text-right">
+      <div class="btn-group btn-group-sm" *ngIf="!showGoBack">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['主线剧情','Main Story'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['竞技场','Tournament'][language]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row" style="margin:14px 4px;">
+    <ng-container *ngIf="showStages && tabIndex === 0">
+      <div class="jh-place-place col-12" style="padding: 0;" *ngFor="let stage of data; index as i">
+        <div class="card jh-place-card" (click)="selectStage(i)">
+          <h4 class="card-title jh-place-name text-center">{{[stage.nameCN,stage.nameEN][language]}}</h4>
+          <div style="height: 240px;overflow:hidden;position:relative">
+            <img class="jh-place-image"
+                [src]="stage.imagePath"
+                [class.jh-place-lock]="!profile.stages || !profile.stages[i] || !profile.stages[i][0][0].available">
+            <img src="/assets/images/lock.png"
+                class="jh-place-lock-img"
+                *ngIf="!profile.stages || !profile.stages[i] || !profile.stages[i][0][0].available">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showPlaces">
+      <div class="jh-place-place col-md-6 col-sm-12" style="padding: 0;" *ngFor="let place of profile.stages[stageIndex]; index as i">
+        <div class="card jh-place-card" (click)="selectPlace(i)">
+          <h4 class="card-title jh-place-name text-center">{{[data[stageIndex].places[i].nameCN,data[stageIndex].places[i].nameEN][language]}}</h4>
+          <div style="height: 240px;overflow:hidden;position:relative">
+            <img class="jh-place-image"
+                [src]="data[stageIndex].places[i].imagePath" [class.jh-place-lock]="!place[0].available">
+            <img src="/assets/images/lock.png" class="jh-place-lock-img" *ngIf="!place[0].available">
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="showBattles">
+      <div class="jh-place-npc col-md-6 col-sm-12" style="padding: 0;" *ngFor="let battle of profile.stages[stageIndex][placeIndex]; index as i">
+        <div class="card bg-primary jh-npc-one" (click)="checkBattle(i)">
+          <div class="col-6 jh-place-battle">
+            <img src="/assets/images/lock.png" class="jh-place-lock-img" *ngIf="!battle.available">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-place-battle-title text-left">{{['第','Battle NO. '][language] + (i + 1) + ['场战斗',''][language]}}</h4>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <app-tournament #tournament *ngIf="tabIndex === 1"
+    [profile]=profile
+    (onSetTeams)="setTeams($event)">
+  </app-tournament>
+</div>
+
+<app-conversation
+  #conversation
+  [stageIndex]=stageIndex
+  [placeIndex]=placeIndex
+  [battleIndex]=battleIndex
+  [profile]=profile
+  (onFinish)="finishConversation()"
+  (onSetTeams)="setTeams($event)"
+  *ngIf="inConversation"
+ >
+</app-conversation>

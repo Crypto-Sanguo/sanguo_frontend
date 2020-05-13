@@ -1,0 +1,266 @@
+<div class="jh-market" *ngIf="!waiting">
+  <div class="row" style="margin: 0">
+    <div class="col-auto">
+      <button class="btn btn-sm btn-light" *ngIf="tabIndex===1" (click)="showSellUnit()">{{['挂售英雄','Sell'][language]}}</button>
+      <button class="btn btn-sm btn-light" *ngIf="tabIndex===2" (click)="showSellItem()">{{['挂售道具','Sell'][language]}}</button>
+      <button class="btn btn-sm btn-light" *ngIf="tabIndex===2" (click)="showBuyItem()" style="margin-left: 6px;">{{['购买道具','Buy'][language]}}</button>
+    </div>
+    <div class="col">
+    </div>
+    <div class="col-auto text-right">
+      <div class="btn-group btn-group-sm">
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 1}" (click)="showTab(1)">{{['英雄交易','Hero trading'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 2}" (click)="showTab(2)">{{['道具交易','Item trading'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 0}" (click)="showTab(0)">{{['官方出售','Auction'][language]}}</div>
+        <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tabIndex === 3}" (click)="showTab(3)">{{['新手礼包','Starter Kit'][language]}}</div>
+      </div>
+    </div>
+  </div>
+  <div class="row" style="margin:10px 0;">
+    <ng-container *ngIf="tabIndex===0">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let unit of unitsFromPlatform">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img [src]="unit?.imagePath" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-market-name text-left">{{[unit?.nameCN,unit?.nameEN][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['已售出','Sold amount'][language]}}: {{unit?.soldAmount || 0}}
+            </p>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(unit.unitId)">{{['查看','View'][language]}}</button>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{unit?.price}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="beforeBuyUnitFromPlatform(unit?.unitId, unit?.price)" *ngIf="!unit?.bought">{{['购买','Buy'][language]}}</button>
+            <span *ngIf="unit?.bought">{{['已拥有','Owned'][language]}}</span>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="tabIndex===1">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let unit of unitOffers">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img [src]="unit?.imagePath" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-market-name text-left">{{[unit?.nameCN,unit?.nameEN][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['级别','Level'][language]}}: {{unit?.level}}<br/>
+              {{['卖家','Seller'][language]}}: {{unit?.seller}}
+            </p>
+            <button class="btn btn-sm btn-primary" (click)="showMarketInfo(unit.unitId)">{{['查看','View'][language]}}</button>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{unit?.price}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <ng-container *ngIf="!unit?.isMe">
+              <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="buyUnitOffer(unit.page, unit.rId, unit.price, unit.unitId)" *ngIf="!unit?.bought">{{['购买','Buy'][language]}}</button>
+              <span *ngIf="unit?.bought">{{['已拥有','Owned'][language]}}</span>
+            </ng-container>
+            <button class="btn btn-sm btn-danger" style="width:100%;" type="button" (click)="cancelUnitOffer(unit.unitId)" *ngIf="unit?.isMe">{{['撤单','Cancel'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="tabIndex===2">
+      <div class="col-md-6 col-sm-12" style="padding: 4px" *ngFor="let item of itemOffers">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img [src]="item.imagePath" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-player-gear-name text-left">{{[item?.nameCN,item?.nameEN][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['级别','Level'][language]}}: {{item?.level}}<br/>
+              <ng-container *ngIf="item.isMountable">{{['纯度','Quality'][language]}}: {{item?.score}}%<br/></ng-container>
+              {{['卖家','Seller'][language]}}: {{item?.seller}}<br />
+            </p>
+            <button class="btn btn-sm btn-primary" (click)="showMarketItemInfo(item.rId, item.seller)">{{['查看','View'][language]}}</button>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{item?.price}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <ng-container *ngIf="!item?.isMe">
+              <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="buyItemOffer(item.page, item.rId, item.price)">{{['购买','Buy'][language]}}</button>
+            </ng-container>
+            <button class="btn btn-sm btn-danger" style="width:100%;" type="button" (click)="cancelItemOffer(item.rId)" *ngIf="item?.isMe">{{['撤单','Cancel'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="tabIndex===3">
+      <div class="col-md-6 col-sm-12" style="padding: 4px">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img src="/assets/images/heroes/liubei.jpg" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-market-name text-left">{{["刘备，关羽，张飞三日体验包","Liu Bei, Guan Yu, Zhang Fei (3-Day Trial)"][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['只供新用户','For new users only'][language]}}
+            </p>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{starterPrice}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="startTrial(0)">{{['购买','Buy'][language]}}</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12" style="padding: 4px">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img src="/assets/images/heroes/xiahoudun.jpg" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-market-name text-left">{{["夏侯惇，典韦，许褚三日体验包","Xiahou Dun, Dian Wei, Xu Chu (3-Day Trial)"][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['只供新用户','For new users only'][language]}}
+            </p>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{starterPrice}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="startTrial(1)">{{['购买','Buy'][language]}}</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-sm-12" style="padding: 4px">
+        <div class="card row jh-market-one">
+          <div class="col-6 jh-market-one-img">
+            <img src="/assets/images/heroes/zhouyu.jpg" width="128px" style="display: block; margin: auto;">
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h4 class="card-title jh-market-name text-left">{{["周瑜，小乔，太史慈三日体验包","Taishi Ci, Zhou Yu, Xiao Qiao (3-Day Trial)"][language]}}</h4>
+            <p class="jh-player-gear-stats">
+              {{['只供新用户','For new users only'][language]}}
+            </p>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <h5 class="text-center gold">{{starterPrice}} <i class="icon-iost"></i></h5>
+          </div>
+          <div class="col-6" style="padding: 8px;">
+            <button class="btn btn-sm btn-light" style="width:100%;" type="button" (click)="startTrial(2)">{{['购买','Buy'][language]}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+  </div>
+  <div class="row" style="margin:10px;" *ngIf="tabIndex!=3">
+    <div class="col-auto" style="padding-right:0px; padding-left: 4px; min-width: 64px;">
+      <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(1)" *ngIf="currentPage > 1">
+        <span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+      <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(currentPage - 1)" *ngIf="currentPage > 1">
+        <span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+    <div class="col-auto jh-market-img mx-auto" style="padding:0px;">
+      <select class="btn btn-sm btn-primary" style="height: 29px;"><option>{{['默认顺序','Default Order'][language]}}</option></select>
+      <button class="btn btn-sm btn-primary float-center" (click)="refresh()">
+        <span class="icon-refresh" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+    <div class="col-auto" style="padding-left:0px; padding-right: 4px; min-width: 27px;">
+      <button class="btn btn-sm btn-primary float-right" (click)="gotoPage(currentPage + 1)" *ngIf="hasMore">
+        <span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span>
+      </button>
+    </div>
+  </div>
+</div>
+<div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: calc(50% - 160px) auto; display: block; width: 80px;"></div>
+
+<div style="position: absolute; bottom: 60px; right: 30px; z-index: 1; cursor: pointer;" (click)="showMarketFilter()" *ngIf="tabIndex != 0 && tabIndex != 3">
+  <i class="icon icon-zoomin" style="font-size: 30px;"></i>
+</div>
+
+<app-market-sell-unit 
+    #marketSellUnit
+    *ngIf="willShowSellUnit"
+    [profile]=profile
+    (onCloseAndRefresh)="onCloseAndRefresh()"
+    (onClose)="onClose()">
+</app-market-sell-unit>
+
+<app-market-sell-item
+    #marketSellItem
+    *ngIf="willShowSellItem"
+    [profile]=profile
+    (onCloseAndRefresh)="onCloseAndRefresh()"
+    (onClose)="onClose()">
+</app-market-sell-item>
+
+<app-market-buy-item
+    #marketBuyItem
+    *ngIf="willShowBuyItem"
+    [profile]=profile
+    (onCloseAndRefresh)="onCloseAndRefresh($event)"
+    (onClose)="onClose()">
+</app-market-buy-item>
+
+<app-market-info
+    #marketInfo
+    [unitId]=unitInfoId
+    style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+    *ngIf="willShowMarketInfo"
+    (onClose)="onClose()">
+</app-market-info>
+
+<app-market-item-info
+    #marketItemInfo
+    [itemRId]=itemInfoRId
+    [seller]=itemInfoSeller
+    style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+    *ngIf="willShowMarketItemInfo"
+    (onClose)="onClose()">
+</app-market-item-info>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>
+
+<app-login-box
+  #loginBox
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowLoginBox"
+  [profile]="profile"
+  (onClose)="closeLoginBox()">
+</app-login-box>
+
+<app-market-filter
+  #marketFilter
+  style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+  *ngIf="willShowMarketFilter"
+  [isUnit]="tabIndex===1"
+  (onSearch)="filter($event)"
+  (onClose)="closeMarketFilter()">
+</app-market-filter>
+
+<app-price-box
+  #priceBox
+  style="height: 100%; width: 100%; z-index: 1; position: absolute; top: 0"
+  *ngIf="willShowPriceBox"
+  (onChoose)="choosePriceRange($event)"
+  (onClose)="closePriceBox()">
+</app-price-box>

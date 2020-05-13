@@ -1,0 +1,22 @@
+<div style="height: 100%; width: 100%; z-index: 13; position: absolute;">
+  <div class="jh-notification-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{["通知","Nofications"][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-left" style="max-height: 380px; overflow-y: auto;">
+        <ul class="list-group">
+          <li class="list-group-item text-left align-items-center jh-notification-one" *ngFor="let n of notifications">
+            <h6 class="jh-notification-body" [innerHTML]="[n.bodyCN, n.bodyEN][language]">
+            </h6>
+            <h6 class="jh-notification-time"><i class="fas fa-clock"></i> {{n.timeText}}</h6>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="jh-notification-background" (click)="close()"></div>
+</div>

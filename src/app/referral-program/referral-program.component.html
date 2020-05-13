@@ -1,0 +1,70 @@
+<div style="height: 100%; width: 100%; left: 0; top: 0; z-index: 13; position: fixed;">
+  <div class="jh-referral-program-outerbox">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-info">{{["分销计划","Affilite Program"][language]}}</h5>
+        <button type="button" class="close" (click)="close()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <ng-container *ngIf="!waiting">
+          <div class="jumbotron text-center;" style="word-wrap:break-word; margin:8px; padding:8px; overflow-x:hidden; overflow-y:auto; margin-bottom:8px; max-height: 220px;">
+            <div class="row" style="margin: 0">
+              <div class="col-12">
+                <div class="btn-group btn-group-sm">
+                  <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tier === 0}" (click)="showTier(0)">{{['一级','Tier 1'][language]}}</div>
+                  <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tier === 1}" (click)="showTier(1)">{{['二级','Tier 2'][language]}}</div>
+                  <div class="btn btn-sm btn-primary input-group-prepend" [ngClass]="{'active': tier === 2}" (click)="showTier(2)">{{['三级','Tier 3'][language]}}</div>
+                </div>
+              </div>
+            </div>
+
+            <h6 *ngFor="let member of teamInfo">
+              {{member.name}} {{['贡献了','contributed'][language]}} <span class="gold">{{member.amount}} <i class="icon-iost"></i> x {{ ['5%','3.09%','1.91%'][tier] }}</span>
+            </h6>
+
+            <div class="row" style="margin:10px;">
+              <div class="col-6" style="padding-right:0px; padding-left: 4px; min-width: 64px;">
+                <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(1)" *ngIf="currentPage > 1">
+                  <span class="icon-angle-double-left" style="font-size:10px; margin-top:0px;"></span>
+                </button>
+                <button class="btn btn-sm btn-primary float-left" (click)="gotoPage(currentPage - 1)" *ngIf="currentPage > 1">
+                  <span class="icon-angle-left" style="font-size:10px; margin-top:0px;"></span>
+                </button>
+              </div>
+              <div class="col-6" style="padding-left:0px; padding-right: 4px; min-width: 27px;">
+                <button class="btn btn-sm btn-primary float-right" (click)="gotoPage(currentPage + 1)" *ngIf="hasMore">
+                  <span class="icon-angle-right" style="font-size:10px; margin-top:0px;"></span>
+                </button>
+              </div>
+            </div>
+
+          </div>
+          <h6 style="margin-bottom:2px;">{{['当前佣金:','Current Bonus:'][language]}}
+            {{formatNumber(bonus || 0)}}
+            <i class="icon-iost"></i>
+          </h6>
+          <button class="btn btn-sm btn-secondary"
+              style="margin: 10px;" (click)="withdraw()" [disabled]="!this.bonus">
+            {{['提现到钱包','Cash out'][language]}}
+          </button>
+        </ng-container>
+
+        <div *ngIf="waiting"><img src="/assets/images/loading.gif" style="margin: 30px auto; display: block; width: 80px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="jh-referral-program-background"></div>
+</div>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 14; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="closeAlert()">
+</app-alert-message>

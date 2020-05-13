@@ -1,0 +1,54 @@
+.jh-player-gear {
+  height: 100%;
+  width: 100%;
+  z-index: 0;
+  position: absolute;
+  overflow: auto;
+  animation: fadein 1s;
+  -moz-animation: fadein 1s; /* Firefox */
+  -webkit-animation: fadein 1s; /* Safari and Chrome */
+  -o-animation: fadein 1s; /* Opera */
+}
+
+.jh-player-gear-container, .jh-player-gear-title {
+  width: calc(100% - 32px);
+  margin: 13px 15px;
+}
+
+.jh-player-gear-one {
+  padding: 8px;
+  margin: 0px;
+  width: 100%;
+  flex-direction: row;
+}
+
+.jh-player-gear-one-img {
+  padding: 8px;
+}
+
+.jh-player-gear-img img {
+  border-radius: 0.25rem;
+  width: 100%;
+  margin: 10px auto;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  user-drag: none;
+  -webkit-user-drag: none;
+}
+
+.jh-player-gear-stats {
+  white-space: pre;
+  margin: 10px 0;
+}
+
+.jh-player-gear-equip {  
+  margin-right: 10px;
+}
+
+.jh-player-gear-unequip {  
+  margin-right: 10px;
+}

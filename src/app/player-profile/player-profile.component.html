@@ -1,0 +1,130 @@
+<div class="jh-player-profile">
+  <div class="row" style="margin:12px 20px;padding:4px;">
+    <div class="col text-left">
+      <button class="btn btn-sm btn-primary" (click)="goBack()">{{['返回','Back'][language]}}</button>
+    </div>
+    <div class="col text-right">
+      <button class="btn btn-sm btn-primary" (click)="fillEnergyInBatch()">{{['批量补充能量','Recover All'][language]}}</button>
+    </div>
+  </div>
+  <ng-container *ngIf="profile.units.length > 0">
+    <div class="jh-player-profile-one card" *ngFor="let unit of profile.units; index as i">
+      <div class="row">
+        <div class="col-md-3 col-6 jh-player-profile-image">
+          <img [src]="unitData[unit.unitId].imagePath">
+        </div>
+        <div class="col-md-3 col-6 jh-player-profile-info">
+          <h4 class="card-title text-left jh-player-profile-title">
+            {{[unitData[unit.unitId].nameCN,unitData[unit.unitId].nameEN][language]}}
+          </h4>
+          <div class="jh-player-profile-stats">
+            <ul>
+              <li>{{['血量','HP'][language]}} {{unit.hp}}<span class="text-success"> + {{unit.hpP}}</span></li>
+              <li>{{['攻击','ATK'][language]}} {{unit.attack}}<span class="text-success"> + {{unit.attackP}}</span></li>
+              <li>{{['智力','INT'][language]}} {{unit.intelligence}}<span class="text-success"> + {{unit.intelligenceP}}</span></li>
+              <li>{{['防御','DEF'][language]}} {{unit.defense}}<span class="text-success"> + {{unit.defenseP}}</span></li>
+              <li>{{['敏捷','AGI'][language]}} {{unit.agility}}<span class="text-success"> + {{unit.agilityP}}</span></li>
+              <li>{{['运气','LUCK'][language]}} {{unit.luck}}<span class="text-success"> + {{unit.luckP}}</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col jh-player-profile-detail">
+          <div class="card bg-primary jh-player-profile-hp">
+            <div class="row" style="text-align: center">
+              <div class="col-6">
+                <table align="center" valign="middle" width="100%">
+                  <tr>
+                    <td>{{['级别','Level'][language]}}</td>
+                    <td>
+                      <button class="btn btn-sm btn-light" (click)="upgrade(i, unit.unitId)" *ngIf="unit.level<10 || unit.level<15 && unit.unlock && unit.unlock >= 10 || unit.level<20 && unit.unlock && unit.unlock >= 15 || unit.level<25 && unit.unlock && unit.unlock >= unit.level">{{['升级','Upgrade'][language]}}</button>
+                      <button class="btn btn-sm btn-light" (click)="unlockLevel(i, unit.unitId, unit.level)" *ngIf="unit.level==10 && (!unit.unlock || unit.unlock < 10)">{{['突破','Unlock'][language]}}</button>
+                      <button class="btn btn-sm btn-light" (click)="unlockLevel(i, unit.unitId, unit.level)" *ngIf="unit.level==15 && (!unit.unlock || unit.unlock < 15)">{{['突破','Unlock'][language]}}</button>
+                      <button class="btn btn-sm btn-light" (click)="unlockLevel(i, unit.unitId, unit.level)" *ngIf="unit.level>=20 && unit.level<=24 && (!unit.unlock || unit.unlock < unit.level)">{{['突破','Unlock'][language]}}</button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>{{unit.level}}</td>
+                    <td class="text-warning" *ngIf="unit.level<10 || unit.level<15 && unit.unlock && unit.unlock >= 10 || unit.level<20 && unit.unlock && unit.unlock >= 15 || unit.level<25 && unit.unlock && unit.unlock >= unit.level">{{unit.upgradeCost}} <i class="icon-sgt"></i></td>
+
+                    <td class="text-warning" *ngIf="unit.level==10 && (!unit.unlock || unit.unlock < 10)">{{['道符','Dao Amulet'][language]}} * 1</td>
+                    <td class="text-warning" *ngIf="unit.level==15 && (!unit.unlock || unit.unlock < 15)">{{['道符','Dao Amulet'][language]}} * 2</td>
+                    <td class="text-warning" *ngIf="unit.level>=20 && unit.level<=24 && (!unit.unlock || unit.unlock < unit.level)">{{['道符','Dao Amulet'][language]}} * 2 + {{['翡翠锦囊','Emrald Amulet'][language]}} * 1</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-6">
+                <table align="center" valign="middle" width="100%">
+                  <tr>
+                    <td width="50%">{{['体力','Stamina'][language]}}</td>
+                    <td width="50%">
+                      <button class="btn btn-sm btn-light" [disabled]="!unit.energy.canRecover" (click)="recover(i, unit.unitId)">{{['补充','Recover'][language]}}</button>
+                    </td>
+                  </tr>
+                  <tr *ngFor="let energy of [showEnergy(i, now)]">
+                    <td *ngIf="energy">{{energy}} / 10</td>
+                    <td class="text-danger" *ngIf="!energy">{{showTime(i, now)}}</td>
+
+                    <ng-container *ngIf="unit.energy.canRecover">
+                      <td class="gold">{{formatNumber(unit.recoverCost)}} <i class="icon-iost"></i></td>
+                    </ng-container>
+                    <ng-container *ngIf="!unit.energy.canRecover">
+                      <td class="text-danger">{{canRecoverTime}}</td>
+                    </ng-container>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="row jh-player-profile-armor">
+            <div class="col-3">
+              <img [src]="getItemImage(unit, 0)" (click)="doGearMount(unit, 0)">
+            </div>
+            <div class="col-3">
+              <img [src]="getItemImage(unit, 1)" (click)="doGearMount(unit, 1)">
+            </div>
+            <div class="col-3">
+              <img [src]="getItemImage(unit, 3)" (click)="doGearMount(unit, 3)">
+            </div>
+            <div class="col-3">
+              <img [src]="getItemImage(unit, 2)" (click)="doGearMount(unit, 2)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<app-loading-box *ngIf="waiting"></app-loading-box>
+
+<app-player-fill-energy
+    #playerFillEnergy
+    style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+    *ngIf="showFillEnergy"
+    [profile]=profile
+    (onComplete)="onBatchRecover($event)"
+    (onClose)="onClose()">
+</app-player-fill-energy>
+
+<app-gear-mount
+    #gearMount
+    style="height: 100%; width: 100%; z-index: 2; position: absolute; top: 0"
+    *ngIf="showGearMount"
+    [profile]=profile
+    [itemId]=itemIdMounted
+    [itemRId]=itemRIdMounted
+    [unitId]=unitIdToMount
+    [positionIndex]=positionIndexToMount
+    (onClose)="onClose()">
+</app-gear-mount>
+
+<app-alert-message
+  #alertMessage
+  [titleCN]="alertTitleCN"
+  [titleEN]="alertTitleEN"
+  [bodyCN]="alertBodyCN"
+  [bodyEN]="alertBodyEN"
+  style="height: 100%; width: 100%; z-index: 3; position: absolute; top: 0"
+  *ngIf="willShowAlertMessage"
+  (onClose)="onClose()">
+</app-alert-message>
